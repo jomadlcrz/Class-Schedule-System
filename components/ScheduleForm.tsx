@@ -3,6 +3,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import TimePicker from 'react-time-picker';
+import { motion } from 'framer-motion';
 import 'react-time-picker/dist/TimePicker.css';
 import 'react-clock/dist/Clock.css';
 
@@ -133,13 +134,29 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
   }
 
   const desktopFormContent = (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <motion.form 
+      onSubmit={handleSubmit} 
+      className="space-y-4"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.5 }}
+    >
       {error && (
-        <div className="p-2 bg-red-100 text-red-700 rounded">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="p-2 bg-red-100 text-red-700 rounded"
+        >
           {error}
-        </div>
+        </motion.div>
       )}
-      <div>
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.3, delay: 0.1 }}
+      >
         <input
           name="courseCode"
           value={formData.courseCode}
@@ -148,8 +165,13 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           required
           className="w-full p-2 border rounded"
         />
-      </div>
-      <div>
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.3, delay: 0.2 }}
+      >
         <input
           name="descriptiveTitle"
           value={formData.descriptiveTitle}
@@ -158,8 +180,13 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           required
           className="w-full p-2 border rounded"
         />
-      </div>
-      <div>
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.3, delay: 0.3 }}
+      >
         <input
           name="units"
           value={formData.units}
@@ -170,8 +197,13 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           min="1"
           className="w-full p-2 border rounded"
         />
-      </div>
-      <div>
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.3, delay: 0.4 }}
+      >
         <input
           name="days"
           value={formData.days}
@@ -180,8 +212,14 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           required
           className="w-full p-2 border rounded"
         />
-      </div>
-      <div className="space-y-2">
+      </motion.div>
+      <motion.div 
+        className="space-y-2"
+        initial={{ opacity: 0, x: -20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.3, delay: 0.5 }}
+      >
         <label className="block text-sm font-medium text-gray-700">Start Time</label>
         <TimePicker
           onChange={setStartTime}
@@ -189,12 +227,18 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           format="HH:mm"
           clearIcon={null}
           className="w-full"
-          disableClock={false}
+          disableClock={true}
           isOpen={false}
           autoFocus={false}
         />
-      </div>
-      <div className="space-y-2">
+      </motion.div>
+      <motion.div 
+        className="space-y-2"
+        initial={{ opacity: 0, x: -20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.3, delay: 0.6 }}
+      >
         <label className="block text-sm font-medium text-gray-700">End Time</label>
         <TimePicker
           onChange={setEndTime}
@@ -202,12 +246,17 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           format="HH:mm"
           clearIcon={null}
           className="w-full"
-          disableClock={false}
+          disableClock={true}
           isOpen={false}
           autoFocus={false}
         />
-      </div>
-      <div>
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.3, delay: 0.7 }}
+      >
         <input
           name="room"
           value={formData.room}
@@ -216,8 +265,13 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           required
           className="w-full p-2 border rounded"
         />
-      </div>
-      <div>
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.3, delay: 0.8 }}
+      >
         <input
           name="instructor"
           value={formData.instructor}
@@ -226,26 +280,45 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           required
           className="w-full p-2 border rounded"
         />
-      </div>
+      </motion.div>
       
-      <button
+      <motion.button
         type="submit"
         disabled={isSubmitting}
         className="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.3, delay: 0.9 }}
       >
         {isSubmitting ? 'Please wait...' : 'Add Schedule'}
-      </button>
-    </form>
+      </motion.button>
+    </motion.form>
   );
 
   const mobileFormContent = (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <motion.form 
+      onSubmit={handleSubmit} 
+      className="space-y-4"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       {error && (
-        <div className="p-2 bg-red-100 text-red-700 rounded">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="p-2 bg-red-100 text-red-700 rounded"
+        >
           {error}
-        </div>
+        </motion.div>
       )}
-      <div>
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.3, delay: 0.1 }}
+      >
         <input
           name="courseCode"
           value={formData.courseCode}
@@ -254,8 +327,13 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           required
           className="w-full p-2 border rounded"
         />
-      </div>
-      <div>
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.3, delay: 0.2 }}
+      >
         <input
           name="descriptiveTitle"
           value={formData.descriptiveTitle}
@@ -264,8 +342,13 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           required
           className="w-full p-2 border rounded"
         />
-      </div>
-      <div>
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.3, delay: 0.3 }}
+      >
         <input
           name="units"
           value={formData.units}
@@ -276,8 +359,13 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           min="1"
           className="w-full p-2 border rounded"
         />
-      </div>
-      <div>
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.3, delay: 0.4 }}
+      >
         <input
           name="days"
           value={formData.days}
@@ -286,8 +374,14 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           required
           className="w-full p-2 border rounded"
         />
-      </div>
-      <div className="space-y-2">
+      </motion.div>
+      <motion.div 
+        className="space-y-2"
+        initial={{ opacity: 0, x: -20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.3, delay: 0.5 }}
+      >
         <label className="block text-sm font-medium text-gray-700">Start Time</label>
         <TimePicker
           onChange={setStartTime}
@@ -295,12 +389,18 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           format="HH:mm"
           clearIcon={null}
           className="w-full"
-          disableClock={false}
+          disableClock={true}
           isOpen={false}
           autoFocus={false}
         />
-      </div>
-      <div className="space-y-2">
+      </motion.div>
+      <motion.div 
+        className="space-y-2"
+        initial={{ opacity: 0, x: -20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.3, delay: 0.6 }}
+      >
         <label className="block text-sm font-medium text-gray-700">End Time</label>
         <TimePicker
           onChange={setEndTime}
@@ -308,12 +408,17 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           format="HH:mm"
           clearIcon={null}
           className="w-full"
-          disableClock={false}
+          disableClock={true}
           isOpen={false}
           autoFocus={false}
         />
-      </div>
-      <div>
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.3, delay: 0.7 }}
+      >
         <input
           name="room"
           value={formData.room}
@@ -322,8 +427,13 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           required
           className="w-full p-2 border rounded"
         />
-      </div>
-      <div>
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.3, delay: 0.8 }}
+      >
         <input
           name="instructor"
           value={formData.instructor}
@@ -332,32 +442,46 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           required
           className="w-full p-2 border rounded"
         />
-      </div>
+      </motion.div>
       
       <div className="flex gap-3">
-        <button
+        <motion.button
           type="button"
           onClick={() => setIsModalOpen(false)}
           disabled={isSubmitting}
           className="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded hover:bg-gray-200 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.3, delay: 0.9 }}
         >
           Cancel
-        </button>
-        <button
+        </motion.button>
+        <motion.button
           type="submit"
           disabled={isSubmitting}
           className="flex-1 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.3, delay: 1 }}
         >
           {isSubmitting ? 'Please wait...' : 'Add Schedule'}
-        </button>
+        </motion.button>
       </div>
-    </form>
+    </motion.form>
   );
 
   return (
     <>
       {/* Mobile Add Button */}
-      <div className="md:hidden p-4">
+      <motion.div 
+        className="md:hidden p-4"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+      >
         <button
           onClick={() => setIsModalOpen(true)}
           className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors cursor-pointer"
@@ -365,7 +489,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           <PlusIcon className="h-5 w-5" />
           Add New Schedule
         </button>
-      </div>
+      </motion.div>
 
       {/* Desktop Form */}
       <div className="hidden md:block p-4">

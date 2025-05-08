@@ -3,6 +3,7 @@ import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import TimePicker from 'react-time-picker';
+import { motion, AnimatePresence } from 'framer-motion';
 import 'react-time-picker/dist/TimePicker.css';
 import 'react-clock/dist/Clock.css';
 
@@ -156,68 +157,117 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
   }
 
   return (
-    <div className="overflow-x-auto">
+    <div>
       {error && (
-        <div className="mb-4 p-2 bg-red-100 text-red-700 rounded">
+        <motion.div 
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          className="mb-4 p-2 bg-red-100 text-red-700 rounded"
+        >
           {error}
-        </div>
+        </motion.div>
       )}
 
       {/* Mobile Card View */}
       <div className="md:hidden space-y-4">
-        {schedules.map((s) => (
-          <div key={s._id} className="bg-white rounded-lg shadow p-4 space-y-3">
-            <div className="flex justify-between items-start">
-              <div>
-                <h3 className="font-semibold text-lg">{s.courseCode}</h3>
-                <p className="text-gray-600 text-sm">{s.descriptiveTitle}</p>
-              </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => handleEdit(s._id)}
-                  className="text-blue-600 hover:text-blue-800 cursor-pointer"
-                  title="Edit"
+        <AnimatePresence>
+          {schedules.map((s, index) => (
+            <motion.div
+              key={s._id}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ 
+                duration: 0.5,
+                delay: index * 0.1,
+                type: "spring",
+                stiffness: 100
+              }}
+              className="bg-white rounded-lg shadow p-4"
+            >
+              <motion.div 
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+                className="flex justify-between items-start mb-3"
+              >
+                <div>
+                  <h3 className="font-semibold text-lg">{s.courseCode}</h3>
+                  <p className="text-gray-600 text-sm">{s.descriptiveTitle}</p>
+                </div>
+                <motion.div 
+                  className="flex gap-2"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.3 }}
                 >
-                  <PencilSquareIcon className="w-5 h-5" />
-                </button>
-                <button
-                  onClick={() => openDeleteModal(s._id)}
-                  className="text-red-600 hover:text-red-800 cursor-pointer"
-                  title="Delete"
-                >
-                  <TrashIcon className="w-5 h-5" />
-                </button>
-              </div>
-            </div>
-            
-            <div>
-              <span className="text-gray-500">Units:</span>
-              <span className="ml-1">{s.units}</span>
-            </div>
-            <div>
-              <span className="text-gray-500">Days:</span>
-              <span className="ml-1">{s.days}</span>
-            </div>
-            <div>
-              <span className="text-gray-500">Time:</span>
-              <span className="ml-1">{s.time}</span>
-            </div>
-            <div>
-              <span className="text-gray-500">Room:</span>
-              <span className="ml-1">{s.room}</span>
-            </div>
-            <div className="col-span-2">
-              <span className="text-gray-500">Instructor:</span>
-              <span className="ml-1">{s.instructor}</span>
-            </div>
-          </div>
-        ))}
+                  <button
+                    onClick={() => handleEdit(s._id)}
+                    className="text-blue-600 hover:text-blue-800 cursor-pointer"
+                    title="Edit"
+                  >
+                    <PencilSquareIcon className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={() => openDeleteModal(s._id)}
+                    className="text-red-600 hover:text-red-800 cursor-pointer"
+                    title="Delete"
+                  >
+                    <TrashIcon className="w-5 h-5" />
+                  </button>
+                </motion.div>
+              </motion.div>
+              
+              <motion.div 
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.4 }}
+                className="grid grid-cols-2 gap-2 text-sm"
+              >
+                <div>
+                  <span className="text-gray-500">Units:</span>
+                  <span className="ml-1">{s.units}</span>
+                </div>
+                <div>
+                  <span className="text-gray-500">Days:</span>
+                  <span className="ml-1">{s.days}</span>
+                </div>
+                <div>
+                  <span className="text-gray-500">Time:</span>
+                  <span className="ml-1">{s.time}</span>
+                </div>
+                <div>
+                  <span className="text-gray-500">Room:</span>
+                  <span className="ml-1">{s.room}</span>
+                </div>
+                <div className="col-span-2">
+                  <span className="text-gray-500">Instructor:</span>
+                  <span className="ml-1">{s.instructor}</span>
+                </div>
+              </motion.div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
 
       {/* Desktop Table View */}
-      <div className="hidden md:block">
-        <table className="min-w-full border border-gray-300">
-          <thead className="bg-gray-100">
+      <div className="hidden md:block overflow-x-auto">
+        <motion.table 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="min-w-full border border-gray-300"
+        >
+          <motion.thead 
+            initial={{ y: -20 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="bg-gray-100"
+          >
             <tr>
               <th className="border p-2 text-left">Course Code</th>
               <th className="border p-2 text-left">Descriptive Title</th>
@@ -228,39 +278,48 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
               <th className="border p-2 text-left">Instructor</th>
               <th className="border p-2 text-left">Actions</th>
             </tr>
-          </thead>
+          </motion.thead>
           <tbody>
-            {schedules.map((s) => (
-              <tr key={s._id} className="hover:bg-gray-50">
-                <td className="border p-2">{s.courseCode}</td>
-                <td className="border p-2">{s.descriptiveTitle}</td>
-                <td className="border p-2 text-center">{s.units}</td>
-                <td className="border p-2 text-center">{s.days}</td>
-                <td className="border p-2 text-center">{s.time}</td>
-                <td className="border p-2 text-center">{s.room}</td>
-                <td className="border p-2">{s.instructor}</td>
-                <td className="border p-2">
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => handleEdit(s._id)}
-                      className="text-blue-600 hover:text-blue-800 cursor-pointer"
-                      title="Edit"
-                    >
-                      <PencilSquareIcon className="w-5 h-5" />
-                    </button>
-                    <button
-                      onClick={() => openDeleteModal(s._id)}
-                      className="text-red-600 hover:text-red-800 cursor-pointer"
-                      title="Delete"
-                    >
-                      <TrashIcon className="w-5 h-5" />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+            <AnimatePresence>
+              {schedules.map((s, index) => (
+                <motion.tr
+                  key={s._id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                  className="hover:bg-gray-50"
+                >
+                  <td className="border p-2">{s.courseCode}</td>
+                  <td className="border p-2">{s.descriptiveTitle}</td>
+                  <td className="border p-2 text-center">{s.units}</td>
+                  <td className="border p-2 text-center">{s.days}</td>
+                  <td className="border p-2 text-center">{s.time}</td>
+                  <td className="border p-2 text-center">{s.room}</td>
+                  <td className="border p-2">{s.instructor}</td>
+                  <td className="border p-2">
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleEdit(s._id)}
+                        className="text-blue-600 hover:text-blue-800 cursor-pointer"
+                        title="Edit"
+                      >
+                        <PencilSquareIcon className="w-5 h-5" />
+                      </button>
+                      <button
+                        onClick={() => openDeleteModal(s._id)}
+                        className="text-red-600 hover:text-red-800 cursor-pointer"
+                        title="Delete"
+                      >
+                        <TrashIcon className="w-5 h-5" />
+                      </button>
+                    </div>
+                  </td>
+                </motion.tr>
+              ))}
+            </AnimatePresence>
           </tbody>
-        </table>
+        </motion.table>
       </div>
 
       {/* Edit Modal */}
@@ -343,7 +402,7 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
                         format="HH:mm"
                         clearIcon={null}
                         className="w-full"
-                        disableClock={false}
+                        disableClock={true}
                         isOpen={false}
                         autoFocus={false}
                       />
@@ -356,7 +415,7 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
                         format="HH:mm"
                         clearIcon={null}
                         className="w-full"
-                        disableClock={false}
+                        disableClock={true}
                         isOpen={false}
                         autoFocus={false}
                       />

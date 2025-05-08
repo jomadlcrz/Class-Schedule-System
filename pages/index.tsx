@@ -6,6 +6,7 @@ import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { EnvelopeIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 
 type Schedule = {
   _id: string;
@@ -49,7 +50,11 @@ export default function Home() {
   if (status === "loading") {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
+        <motion.div 
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          className="rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"
+        />
       </div>
     );
   }
@@ -57,8 +62,18 @@ export default function Home() {
   if (!session) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="bg-white p-8 rounded-lg shadow-md text-center">
-          <div className="mb-6">
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="bg-white p-8 rounded-lg shadow-md text-center"
+        >
+          <motion.div 
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="mb-6"
+          >
             <Image
               src="/logo.png"
               alt="Class Schedule Logo"
@@ -68,10 +83,29 @@ export default function Home() {
               style={{ width: 'auto', height: 'auto' }}
               priority
             />
-          </div>
-          <h1 className="text-2xl font-bold mb-6">Welcome to Class Schedule</h1>
-          <p className="text-gray-600 mb-6">Please sign in to manage your class schedule</p>
-          <div className="flex justify-center">
+          </motion.div>
+          <motion.h1 
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="text-2xl font-bold mb-6"
+          >
+            Welcome to Class Schedule
+          </motion.h1>
+          <motion.p 
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="text-gray-600 mb-6"
+          >
+            Please sign in to manage your class schedule
+          </motion.p>
+          <motion.div 
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="flex justify-center"
+          >
             <button
               onClick={() => signIn("google")}
               className="flex items-center justify-center gap-2 bg-white text-gray-700 px-6 py-3 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors cursor-pointer"
@@ -85,15 +119,20 @@ export default function Home() {
               />
               Sign in with Google
             </button>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm">
+      <motion.header 
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ type: "spring", stiffness: 100 }}
+        className="bg-white shadow"
+      >
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <button
             onClick={() => window.location.reload()}
@@ -169,26 +208,63 @@ export default function Home() {
             </Transition>
           </Menu>
         </div>
-      </nav>
+      </motion.header>
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <motion.main 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3 }}
+        className="max-w-7xl mx-auto px-4 py-8"
+      >
         {error && (
-          <div className="mb-6 p-4 bg-red-100 text-red-700 rounded-lg">
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 p-4 bg-red-100 text-red-700 rounded-lg"
+          >
             {error}
-          </div>
+          </motion.div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="md:col-span-1">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.5 }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+        >
+          <motion.div 
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ 
+              duration: 0.5,
+              type: "spring",
+              stiffness: 100
+            }}
+            className="md:col-span-1"
+          >
             <div className="bg-white rounded-lg shadow">
               <div className="p-4 border-b">
                 <h2 className="text-lg font-semibold">Add New Schedule</h2>
               </div>
-              <ScheduleForm onAdded={handleSchedulesChange} />
+              <div className="p-4">
+                <ScheduleForm onAdded={handleSchedulesChange} />
+              </div>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="md:col-span-2">
+          <motion.div 
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ 
+              duration: 0.5,
+              type: "spring",
+              stiffness: 100
+            }}
+            className="md:col-span-2"
+          >
             <div className="bg-white rounded-lg shadow">
               <div className="p-4 border-b">
                 <h2 className="text-lg font-semibold">Your Schedule</h2>
@@ -197,9 +273,9 @@ export default function Home() {
                 <ScheduleTable schedules={schedules} onChange={handleSchedulesChange} />
               </div>
             </div>
-          </div>
-        </div>
-      </main>
+          </motion.div>
+        </motion.div>
+      </motion.main>
     </div>
   );
 }
