@@ -71,12 +71,21 @@ export default function Home() {
           </div>
           <h1 className="text-2xl font-bold mb-6">Welcome to Class Schedule</h1>
           <p className="text-gray-600 mb-6">Please sign in to manage your class schedule</p>
-          <button
-            onClick={() => signIn("google")}
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
-          >
-            Sign in with Google
-          </button>
+          <div className="flex justify-center">
+            <button
+              onClick={() => signIn("google")}
+              className="flex items-center justify-center gap-2 bg-white text-gray-700 px-6 py-3 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors cursor-pointer"
+            >
+              <Image
+                src="/google.svg"
+                alt="Google"
+                width={20}
+                height={20}
+                className="w-5 h-5"
+              />
+              Sign in with Google
+            </button>
+          </div>
         </div>
       </div>
     );

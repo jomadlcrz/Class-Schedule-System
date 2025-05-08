@@ -20,6 +20,10 @@ export const authOptions: NextAuthOptions = {
   ],
   adapter: MongoDBAdapter(clientPromise),
   secret: process.env.NEXTAUTH_SECRET,
+  pages: {
+    signIn: '/',
+    error: '/',
+  },
   session: {
     strategy: "database",
     maxAge: 30 * 24 * 60 * 60, // 30 days
