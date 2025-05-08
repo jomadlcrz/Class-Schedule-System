@@ -107,7 +107,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
     }));
   }
 
-  const formContent = (
+  const desktopFormContent = (
     <form onSubmit={handleSubmit} className="space-y-4">
       {error && (
         <div className="p-2 bg-red-100 text-red-700 rounded">
@@ -196,6 +196,104 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
     </form>
   );
 
+  const mobileFormContent = (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {error && (
+        <div className="p-2 bg-red-100 text-red-700 rounded">
+          {error}
+        </div>
+      )}
+      <div>
+        <input
+          name="courseCode"
+          value={formData.courseCode}
+          onChange={handleChange}
+          placeholder="Course Code"
+          required
+          className="w-full p-2 border rounded"
+        />
+      </div>
+      <div>
+        <input
+          name="descriptiveTitle"
+          value={formData.descriptiveTitle}
+          onChange={handleChange}
+          placeholder="Descriptive Title"
+          required
+          className="w-full p-2 border rounded"
+        />
+      </div>
+      <div>
+        <input
+          name="units"
+          value={formData.units}
+          onChange={handleChange}
+          placeholder="Units"
+          required
+          type="number"
+          min="1"
+          className="w-full p-2 border rounded"
+        />
+      </div>
+      <div>
+        <input
+          name="days"
+          value={formData.days}
+          onChange={handleChange}
+          placeholder="Days (e.g., MWF, TTH)"
+          required
+          className="w-full p-2 border rounded"
+        />
+      </div>
+      <div>
+        <input
+          name="time"
+          value={formData.time}
+          onChange={handleChange}
+          placeholder="Time (e.g., 8:00-9:00)"
+          required
+          className="w-full p-2 border rounded"
+        />
+      </div>
+      <div>
+        <input
+          name="room"
+          value={formData.room}
+          onChange={handleChange}
+          placeholder="Room"
+          required
+          className="w-full p-2 border rounded"
+        />
+      </div>
+      <div>
+        <input
+          name="instructor"
+          value={formData.instructor}
+          onChange={handleChange}
+          placeholder="Instructor"
+          required
+          className="w-full p-2 border rounded"
+        />
+      </div>
+      
+      <div className="flex gap-3">
+        <button
+          type="button"
+          onClick={() => setIsModalOpen(false)}
+          className="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded hover:bg-gray-200 transition-colors cursor-pointer"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          className="flex-1 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors cursor-pointer"
+        >
+          Add Schedule
+        </button>
+      </div>
+    </form>
+  );
+
   return (
     <>
       {/* Mobile Add Button */}
@@ -211,7 +309,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
 
       {/* Desktop Form */}
       <div className="hidden md:block p-4">
-        {formContent}
+        {desktopFormContent}
       </div>
 
       {/* Mobile Modal */}
@@ -247,7 +345,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
                   >
                     Add New Schedule
                   </Dialog.Title>
-                  {formContent}
+                  {mobileFormContent}
                 </Dialog.Panel>
               </Transition.Child>
             </div>

@@ -19,7 +19,7 @@ type Schedule = {
 };
 
 export default function Home() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [error, setError] = useState('');
 
@@ -44,6 +44,14 @@ export default function Home() {
 
   function handleSchedulesChange(callback: (prev: Schedule[]) => Schedule[]) {
     setSchedules(callback);
+  }
+
+  if (status === "loading") {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
+      </div>
+    );
   }
 
   if (!session) {
