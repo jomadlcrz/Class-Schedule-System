@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import { Dialog, Transition } from '@headlessui/react';
+import { Fragment } from 'react';
+import { PlusIcon } from '@heroicons/react/24/outline';
 
 type ScheduleFormData = {
   courseCode: string;
@@ -32,6 +35,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
     instructor: ''
   });
   const [error, setError] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   function validateTime(time: string) {
     const timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]-([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
@@ -88,6 +92,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
         room: '',
         instructor: ''
       });
+      setIsModalOpen(false);
     } catch (err) {
       console.error('Error adding schedule:', err);
       setError('Failed to add schedule. Please try again.');
@@ -102,8 +107,13 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
     }));
   }
 
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4 p-4 bg-white rounded-lg shadow">
+  const formContent = (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {error && (
+        <div className="p-2 bg-red-100 text-red-700 rounded">
+          {error}
+        </div>
+      )}
       <div>
         <input
           name="courseCode"
@@ -176,7 +186,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           className="w-full p-2 border rounded"
         />
       </div>
-      {error && <p className="text-red-500 text-sm">{error}</p>}
+      
       <button
         type="submit"
         className="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors cursor-pointer"
@@ -184,5 +194,66 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
         Add Schedule
       </button>
     </form>
+  );
+
+  return (
+    <>
+      {/* Mobile Add Button */}
+      <div className="md:hidden p-4">
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors cursor-pointer"
+        >
+          <PlusIcon className="h-5 w-5" />
+          Add New Schedule
+        </button>
+      </div>
+
+      {/* Desktop Form */}
+      <div className="hidden md:block p-4">
+        {formContent}
+      </div>
+
+      {/* Mobile Modal */}
+      <Transition appear show={isModalOpen} as={Fragment}>
+        <Dialog as="div" className="relative z-10" onClose={() => setIsModalOpen(false)}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-gray-100/30 backdrop-blur-[2px]" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-lg font-medium leading-6 text-gray-900 mb-4"
+                  >
+                    Add New Schedule
+                  </Dialog.Title>
+                  {formContent}
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
+    </>
   );
 }
