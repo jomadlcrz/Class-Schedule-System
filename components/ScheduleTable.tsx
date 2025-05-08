@@ -127,10 +127,10 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
           <tr>
             <th className="border p-2 text-left">Course Code</th>
             <th className="border p-2 text-left">Descriptive Title</th>
-            <th className="border p-2 text-left">Units</th>
-            <th className="border p-2 text-left">Days</th>
-            <th className="border p-2 text-left">Time</th>
-            <th className="border p-2 text-left">Room</th>
+            <th className="border p-2 text-center">Units</th>
+            <th className="border p-2 text-center">Days</th>
+            <th className="border p-2 text-center">Time</th>
+            <th className="border p-2 text-center">Room</th>
             <th className="border p-2 text-left">Instructor</th>
             <th className="border p-2 text-left">Actions</th>
           </tr>
@@ -141,9 +141,9 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
               <td className="border p-2">{s.courseCode}</td>
               <td className="border p-2">{s.descriptiveTitle}</td>
               <td className="border p-2 text-center">{s.units}</td>
-              <td className="border p-2">{s.days}</td>
-              <td className="border p-2">{s.time}</td>
-              <td className="border p-2">{s.room}</td>
+              <td className="border p-2 text-center">{s.days}</td>
+              <td className="border p-2 text-center">{s.time}</td>
+              <td className="border p-2 text-center">{s.room}</td>
               <td className="border p-2">{s.instructor}</td>
               <td className="border p-2">
                 <div className="flex gap-2">
@@ -171,6 +171,18 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
       {/* Edit Modal */}
       <Transition appear show={isEditModalOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={handleCancelEdit}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-gray-100/30 backdrop-blur-[2px]" />
+          </Transition.Child>
+
           <div className="fixed inset-0 overflow-y-auto">
             <div className="flex min-h-full items-center justify-center p-4 text-center">
               <Transition.Child
@@ -281,6 +293,18 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
       {/* Delete Confirmation Modal */}
       <Transition appear show={isDeleteModalOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={() => setIsDeleteModalOpen(false)}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-gray-100/30 backdrop-blur-[2px]" />
+          </Transition.Child>
+
           <div className="fixed inset-0 overflow-y-auto">
             <div className="flex min-h-full items-center justify-center p-4 text-center">
               <Transition.Child
