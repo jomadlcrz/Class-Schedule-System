@@ -21,6 +21,7 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   async function handleDelete(id: string) {
     if (!id) {
@@ -66,6 +67,7 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
 
   async function handleSaveEdit() {
     if (!editingId || !editForm) return;
+    setIsSaving(true);
 
     try {
       const res = await fetch(`/api/schedule/${editingId}`, {
@@ -95,6 +97,8 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update schedule. Please try again.');
       setTimeout(() => setError(''), 3000);
+    } finally {
+      setIsSaving(false);
     }
   }
 
@@ -326,17 +330,19 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
                   <div className="mt-6 flex justify-end gap-3">
                     <button
                       type="button"
-                      className="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 cursor-pointer"
+                      disabled={isSaving}
+                      className="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                       onClick={handleCancelEdit}
                     >
                       Cancel
                     </button>
                     <button
                       type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 cursor-pointer"
+                      disabled={isSaving}
+                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                       onClick={handleSaveEdit}
                     >
-                      Save Changes
+                      {isSaving ? 'Please wait...' : 'Save Changes'}
                     </button>
                   </div>
                 </Dialog.Panel>

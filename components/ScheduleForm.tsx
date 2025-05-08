@@ -36,6 +36,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
   });
   const [error, setError] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   function validateTime(time: string) {
     const timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]-([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
@@ -54,19 +55,23 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError('');
+    setIsSubmitting(true);
 
     if (!validateTime(formData.time)) {
       setError('Please enter a valid time range in 24-hour format (HH:MM-HH:MM)');
+      setIsSubmitting(false);
       return;
     }
 
     if (!validateDays(formData.days)) {
       setError('Please enter valid days (MWF, TTH, M, T, W, TH, F, S)');
+      setIsSubmitting(false);
       return;
     }
 
     if (!validateUnits(formData.units)) {
       setError('Please enter a valid number of units');
+      setIsSubmitting(false);
       return;
     }
 
@@ -96,6 +101,8 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
     } catch (err) {
       console.error('Error adding schedule:', err);
       setError('Failed to add schedule. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -189,9 +196,10 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
       
       <button
         type="submit"
-        className="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors cursor-pointer"
+        disabled={isSubmitting}
+        className="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        Add Schedule
+        {isSubmitting ? 'Please wait...' : 'Add Schedule'}
       </button>
     </form>
   );
@@ -280,15 +288,17 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
         <button
           type="button"
           onClick={() => setIsModalOpen(false)}
-          className="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded hover:bg-gray-200 transition-colors cursor-pointer"
+          disabled={isSubmitting}
+          className="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded hover:bg-gray-200 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="flex-1 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors cursor-pointer"
+          disabled={isSubmitting}
+          className="flex-1 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Add Schedule
+          {isSubmitting ? 'Please wait...' : 'Add Schedule'}
         </button>
       </div>
     </form>
