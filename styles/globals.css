@@ -3,3 +3,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+::-webkit-selection {
+  background-color: #CCFBF1;
+  color: #0F766E;
+}
+
+::-moz-selection {
+  background-color: #CCFBF1;
+  color: #0F766E;
+}
+
+::selection {
+  background-color: #CCFBF1;
+  color: #0F766E;
+}
+
+img, svg, [role="img"], [role="button"] {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
