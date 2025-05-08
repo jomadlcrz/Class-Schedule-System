@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { Dialog, Transition } from '@headlessui/react';
+import { Fragment } from 'react';
 
 type Schedule = {
   _id: string;
@@ -16,6 +18,9 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
   const [error, setError] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<Schedule | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
   async function handleDelete(id: string) {
     if (!id) {
@@ -37,6 +42,8 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
       }
 
       onChange((prev) => prev.filter((item) => item._id !== id));
+      setIsDeleteModalOpen(false);
+      setDeleteId(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to delete schedule. Please try again.');
       setTimeout(() => setError(''), 3000);
@@ -53,6 +60,7 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
     if (schedule) {
       setEditingId(id);
       setEditForm(schedule);
+      setIsEditModalOpen(true);
     }
   }
 
@@ -74,7 +82,6 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
         throw new Error(data.error || 'Failed to update schedule');
       }
 
-      // Update the UI with the server response
       onChange((prev) => {
         const newSchedules = prev.map(item => 
           item._id === editingId ? { ...item, ...data } : item
@@ -82,7 +89,7 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
         return newSchedules;
       });
 
-      // Clear editing state after successful save
+      setIsEditModalOpen(false);
       setEditingId(null);
       setEditForm(null);
     } catch (err) {
@@ -92,6 +99,7 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
   }
 
   function handleCancelEdit() {
+    setIsEditModalOpen(false);
     setEditingId(null);
     setEditForm(null);
   }
@@ -100,6 +108,11 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
     if (!editForm) return;
     const { name, value } = e.target;
     setEditForm(prev => prev ? { ...prev, [name]: value } : null);
+  }
+
+  function openDeleteModal(id: string) {
+    setDeleteId(id);
+    setIsDeleteModalOpen(true);
   }
 
   return (
@@ -125,120 +138,195 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
         <tbody>
           {schedules.map((s) => (
             <tr key={s._id} className="hover:bg-gray-50">
-              {editingId === s._id ? (
-                <>
-                  <td className="border p-2">
-                    <input
-                      name="courseCode"
-                      value={editForm?.courseCode || ''}
-                      onChange={handleEditChange}
-                      className="w-full p-1 border rounded"
-                    />
-                  </td>
-                  <td className="border p-2">
-                    <input
-                      name="descriptiveTitle"
-                      value={editForm?.descriptiveTitle || ''}
-                      onChange={handleEditChange}
-                      className="w-full p-1 border rounded"
-                    />
-                  </td>
-                  <td className="border p-2">
-                    <input
-                      name="units"
-                      value={editForm?.units || ''}
-                      onChange={handleEditChange}
-                      className="w-full p-1 border rounded"
-                    />
-                  </td>
-                  <td className="border p-2">
-                    <input
-                      name="days"
-                      value={editForm?.days || ''}
-                      onChange={handleEditChange}
-                      className="w-full p-1 border rounded"
-                    />
-                  </td>
-                  <td className="border p-2">
-                    <input
-                      name="time"
-                      value={editForm?.time || ''}
-                      onChange={handleEditChange}
-                      className="w-full p-1 border rounded"
-                    />
-                  </td>
-                  <td className="border p-2">
-                    <input
-                      name="room"
-                      value={editForm?.room || ''}
-                      onChange={handleEditChange}
-                      className="w-full p-1 border rounded"
-                    />
-                  </td>
-                  <td className="border p-2">
-                    <input
-                      name="instructor"
-                      value={editForm?.instructor || ''}
-                      onChange={handleEditChange}
-                      className="w-full p-1 border rounded"
-                    />
-                  </td>
-                  <td className="border p-2">
-                    <div className="flex gap-2">
-                      <button
-                        onClick={handleSaveEdit}
-                        className="text-green-600 hover:text-green-800"
-                        title="Save"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                        </svg>
-                      </button>
-                      <button
-                        onClick={handleCancelEdit}
-                        className="text-gray-600 hover:text-gray-800"
-                        title="Cancel"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
-                    </div>
-                  </td>
-                </>
-              ) : (
-                <>
-                  <td className="border p-2">{s.courseCode}</td>
-                  <td className="border p-2">{s.descriptiveTitle}</td>
-                  <td className="border p-2 text-center">{s.units}</td>
-                  <td className="border p-2">{s.days}</td>
-                  <td className="border p-2">{s.time}</td>
-                  <td className="border p-2">{s.room}</td>
-                  <td className="border p-2">{s.instructor}</td>
-                  <td className="border p-2">
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => handleEdit(s._id)}
-                        className="text-blue-600 hover:text-blue-800 cursor-pointer"
-                        title="Edit"
-                      >
-                        <PencilIcon className="w-5 h-5" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(s._id)}
-                        className="text-red-600 hover:text-red-800 cursor-pointer"
-                        title="Delete"
-                      >
-                        <TrashIcon className="w-5 h-5" />
-                      </button>
-                    </div>
-                  </td>
-                </>
-              )}
+              <td className="border p-2">{s.courseCode}</td>
+              <td className="border p-2">{s.descriptiveTitle}</td>
+              <td className="border p-2 text-center">{s.units}</td>
+              <td className="border p-2">{s.days}</td>
+              <td className="border p-2">{s.time}</td>
+              <td className="border p-2">{s.room}</td>
+              <td className="border p-2">{s.instructor}</td>
+              <td className="border p-2">
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleEdit(s._id)}
+                    className="text-blue-600 hover:text-blue-800 cursor-pointer"
+                    title="Edit"
+                  >
+                    <PencilIcon className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={() => openDeleteModal(s._id)}
+                    className="text-red-600 hover:text-red-800 cursor-pointer"
+                    title="Delete"
+                  >
+                    <TrashIcon className="w-5 h-5" />
+                  </button>
+                </div>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      {/* Edit Modal */}
+      <Transition appear show={isEditModalOpen} as={Fragment}>
+        <Dialog as="div" className="relative z-10" onClose={handleCancelEdit}>
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-lg font-medium leading-6 text-gray-900 mb-4"
+                  >
+                    Edit Schedule
+                  </Dialog.Title>
+                  <div className="mt-2 space-y-4">
+                    <div>
+                      <input
+                        name="courseCode"
+                        value={editForm?.courseCode || ''}
+                        onChange={handleEditChange}
+                        placeholder="Course Code"
+                        className="w-full p-2 border rounded"
+                      />
+                    </div>
+                    <div>
+                      <input
+                        name="descriptiveTitle"
+                        value={editForm?.descriptiveTitle || ''}
+                        onChange={handleEditChange}
+                        placeholder="Descriptive Title"
+                        className="w-full p-2 border rounded"
+                      />
+                    </div>
+                    <div>
+                      <input
+                        name="units"
+                        value={editForm?.units || ''}
+                        onChange={handleEditChange}
+                        placeholder="Units"
+                        className="w-full p-2 border rounded"
+                      />
+                    </div>
+                    <div>
+                      <input
+                        name="days"
+                        value={editForm?.days || ''}
+                        onChange={handleEditChange}
+                        placeholder="Days"
+                        className="w-full p-2 border rounded"
+                      />
+                    </div>
+                    <div>
+                      <input
+                        name="time"
+                        value={editForm?.time || ''}
+                        onChange={handleEditChange}
+                        placeholder="Time"
+                        className="w-full p-2 border rounded"
+                      />
+                    </div>
+                    <div>
+                      <input
+                        name="room"
+                        value={editForm?.room || ''}
+                        onChange={handleEditChange}
+                        placeholder="Room"
+                        className="w-full p-2 border rounded"
+                      />
+                    </div>
+                    <div>
+                      <input
+                        name="instructor"
+                        value={editForm?.instructor || ''}
+                        onChange={handleEditChange}
+                        placeholder="Instructor"
+                        className="w-full p-2 border rounded"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-6 flex justify-end gap-3">
+                    <button
+                      type="button"
+                      className="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 cursor-pointer"
+                      onClick={handleCancelEdit}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 cursor-pointer"
+                      onClick={handleSaveEdit}
+                    >
+                      Save Changes
+                    </button>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
+
+      {/* Delete Confirmation Modal */}
+      <Transition appear show={isDeleteModalOpen} as={Fragment}>
+        <Dialog as="div" className="relative z-10" onClose={() => setIsDeleteModalOpen(false)}>
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-lg font-medium leading-6 text-gray-900"
+                  >
+                    Confirm Delete
+                  </Dialog.Title>
+                  <div className="mt-2">
+                    <p className="text-sm text-gray-500">
+                      Are you sure you want to delete this schedule? This action cannot be undone.
+                    </p>
+                  </div>
+
+                  <div className="mt-6 flex justify-end gap-3">
+                    <button
+                      type="button"
+                      className="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 cursor-pointer"
+                      onClick={() => setIsDeleteModalOpen(false)}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 cursor-pointer"
+                      onClick={() => deleteId && handleDelete(deleteId)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
     </div>
   );
 }
