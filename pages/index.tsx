@@ -86,7 +86,20 @@ export default function Home() {
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-xl font-semibold">Class Schedule</h1>
+          <button
+            onClick={() => window.location.reload()}
+            className="flex items-center gap-3 hover:opacity-80 transition-opacity cursor-pointer"
+          >
+            <Image
+              src="/logo.png"
+              alt="Class Schedule Logo"
+              width={56}
+              height={56}
+              className="rounded-lg"
+              priority
+            />
+            <h1 className="text-xl font-semibold">Class Schedule</h1>
+          </button>
           <Menu as="div" className="relative inline-block text-left">
             <div>
               <Menu.Button className="inline-flex w-full justify-center items-center rounded-full cursor-pointer outline-none md:hover:ring-2 md:hover:ring-gray-300 transition-all">
