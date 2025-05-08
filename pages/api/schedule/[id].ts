@@ -21,6 +21,7 @@ export default async function handler(
       const db = client.db();
       
       const updateData = req.body;
+      delete updateData._id;
       
       const result = await db.collection('schedules').findOneAndUpdate(
         { _id: new ObjectId(id as string) },
