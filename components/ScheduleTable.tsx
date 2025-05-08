@@ -69,6 +69,14 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
     if (!editingId || !editForm) return;
     setIsSaving(true);
 
+    // Validate time format before saving
+    const timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]-([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
+    if (!timeRegex.test(editForm.time)) {
+      setError('Please enter a valid time range in 24-hour format (HH:MM-HH:MM)');
+      setIsSaving(false);
+      return;
+    }
+
     try {
       const res = await fetch(`/api/schedule/${editingId}`, {
         method: 'PUT',
@@ -111,6 +119,22 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
   function handleEditChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (!editForm) return;
     const { name, value } = e.target;
+    
+    // Prevent non-numeric input for units
+    if (name === 'units') {
+      const numericValue = value.replace(/[^0-9]/g, '');
+      setEditForm(prev => prev ? { ...prev, [name]: numericValue } : null);
+      return;
+    }
+
+    // Special handling for time input
+    if (name === 'time') {
+      // Only allow numbers, colon, and hyphen
+      const sanitizedValue = value.replace(/[^0-9:-]/g, '');
+      setEditForm(prev => prev ? { ...prev, [name]: sanitizedValue } : null);
+      return;
+    }
+    
     setEditForm(prev => prev ? { ...prev, [name]: value } : null);
   }
 
@@ -286,6 +310,8 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
                         value={editForm?.units || ''}
                         onChange={handleEditChange}
                         placeholder="Units"
+                        type="number"
+                        min="1"
                         className="w-full p-2 border rounded"
                       />
                     </div>

@@ -39,6 +39,12 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   function validateTime(time: string) {
+    // First check if the input contains only allowed characters
+    if (!/^[0-9:-]+$/.test(time)) {
+      return false;
+    }
+    
+    // Then validate the time format
     const timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]-([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
     return timeRegex.test(time);
   }
@@ -108,6 +114,18 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
+    
+    // Special handling for time input
+    if (name === 'time') {
+      // Only allow numbers, colon, and hyphen
+      const sanitizedValue = value.replace(/[^0-9:-]/g, '');
+      setFormData(prev => ({
+        ...prev,
+        [name]: sanitizedValue
+      }));
+      return;
+    }
+    
     setFormData(prev => ({
       ...prev,
       [name]: value
