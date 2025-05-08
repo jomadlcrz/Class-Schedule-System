@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 
@@ -152,7 +152,7 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
                     className="text-blue-600 hover:text-blue-800 cursor-pointer"
                     title="Edit"
                   >
-                    <PencilIcon className="w-5 h-5" />
+                    <PencilSquareIcon className="w-5 h-5" />
                   </button>
                   <button
                     onClick={() => openDeleteModal(s._id)}
