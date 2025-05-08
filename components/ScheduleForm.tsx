@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { PlusIcon } from '@heroicons/react/24/outline';
+import TimePicker from 'react-time-picker';
+import 'react-time-picker/dist/TimePicker.css';
+import 'react-clock/dist/Clock.css';
 
 type ScheduleFormData = {
   courseCode: string;
@@ -34,20 +37,11 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
     room: '',
     instructor: ''
   });
+  const [startTime, setStartTime] = useState<string | null>(null);
+  const [endTime, setEndTime] = useState<string | null>(null);
   const [error, setError] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  function validateTime(time: string) {
-    // First check if the input contains only allowed characters
-    if (!/^[0-9:-]+$/.test(time)) {
-      return false;
-    }
-    
-    // Then validate the time format
-    const timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]-([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
-    return timeRegex.test(time);
-  }
 
   function validateDays(days: string) {
     const validPatterns = ['MWF', 'TTH', 'M', 'T', 'W', 'TH', 'F', 'S'];
@@ -63,8 +57,8 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
     setError('');
     setIsSubmitting(true);
 
-    if (!validateTime(formData.time)) {
-      setError('Please enter a valid time range in 24-hour format (HH:MM-HH:MM)');
+    if (!startTime || !endTime) {
+      setError('Please select both start and end times');
       setIsSubmitting(false);
       return;
     }
@@ -81,11 +75,16 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
       return;
     }
 
+    const timeString = `${startTime}-${endTime}`;
+
     try {
       const res = await fetch('/api/schedule', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          time: timeString
+        }),
       });
 
       if (!res.ok) {
@@ -103,6 +102,8 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
         room: '',
         instructor: ''
       });
+      setStartTime(null);
+      setEndTime(null);
       setIsModalOpen(false);
     } catch (err) {
       console.error('Error adding schedule:', err);
@@ -115,13 +116,12 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     
-    // Special handling for time input
-    if (name === 'time') {
-      // Only allow numbers, colon, and hyphen
-      const sanitizedValue = value.replace(/[^0-9:-]/g, '');
+    // Prevent non-numeric input for units
+    if (name === 'units') {
+      const numericValue = value.replace(/[^0-9]/g, '');
       setFormData(prev => ({
         ...prev,
-        [name]: sanitizedValue
+        [name]: numericValue
       }));
       return;
     }
@@ -181,14 +181,30 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           className="w-full p-2 border rounded"
         />
       </div>
-      <div>
-        <input
-          name="time"
-          value={formData.time}
-          onChange={handleChange}
-          placeholder="Time (e.g., 8:00-9:00)"
-          required
-          className="w-full p-2 border rounded"
+      <div className="space-y-2">
+        <label className="block text-sm font-medium text-gray-700">Start Time</label>
+        <TimePicker
+          onChange={setStartTime}
+          value={startTime}
+          format="HH:mm"
+          clearIcon={null}
+          className="w-full"
+          disableClock={false}
+          isOpen={false}
+          autoFocus={false}
+        />
+      </div>
+      <div className="space-y-2">
+        <label className="block text-sm font-medium text-gray-700">End Time</label>
+        <TimePicker
+          onChange={setEndTime}
+          value={endTime}
+          format="HH:mm"
+          clearIcon={null}
+          className="w-full"
+          disableClock={false}
+          isOpen={false}
+          autoFocus={false}
         />
       </div>
       <div>
@@ -271,14 +287,30 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           className="w-full p-2 border rounded"
         />
       </div>
-      <div>
-        <input
-          name="time"
-          value={formData.time}
-          onChange={handleChange}
-          placeholder="Time (e.g., 8:00-9:00)"
-          required
-          className="w-full p-2 border rounded"
+      <div className="space-y-2">
+        <label className="block text-sm font-medium text-gray-700">Start Time</label>
+        <TimePicker
+          onChange={setStartTime}
+          value={startTime}
+          format="HH:mm"
+          clearIcon={null}
+          className="w-full"
+          disableClock={false}
+          isOpen={false}
+          autoFocus={false}
+        />
+      </div>
+      <div className="space-y-2">
+        <label className="block text-sm font-medium text-gray-700">End Time</label>
+        <TimePicker
+          onChange={setEndTime}
+          value={endTime}
+          format="HH:mm"
+          clearIcon={null}
+          className="w-full"
+          disableClock={false}
+          isOpen={false}
+          autoFocus={false}
         />
       </div>
       <div>

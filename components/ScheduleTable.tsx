@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
+import TimePicker from 'react-time-picker';
+import 'react-time-picker/dist/TimePicker.css';
+import 'react-clock/dist/Clock.css';
 
 type Schedule = {
   _id: string;
@@ -18,10 +21,17 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
   const [error, setError] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<Schedule | null>(null);
+  const [startTime, setStartTime] = useState<string | null>(null);
+  const [endTime, setEndTime] = useState<string | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+
+  function parseTime(timeString: string): { start: string | null; end: string | null } {
+    const [start, end] = timeString.split('-');
+    return { start: start || null, end: end || null };
+  }
 
   async function handleDelete(id: string) {
     if (!id) {
@@ -61,6 +71,9 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
     if (schedule) {
       setEditingId(id);
       setEditForm(schedule);
+      const { start, end } = parseTime(schedule.time);
+      setStartTime(start);
+      setEndTime(end);
       setIsEditModalOpen(true);
     }
   }
@@ -69,13 +82,13 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
     if (!editingId || !editForm) return;
     setIsSaving(true);
 
-    // Validate time format before saving
-    const timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]-([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
-    if (!timeRegex.test(editForm.time)) {
-      setError('Please enter a valid time range in 24-hour format (HH:MM-HH:MM)');
+    if (!startTime || !endTime) {
+      setError('Please select both start and end times');
       setIsSaving(false);
       return;
     }
+
+    const timeString = `${startTime}-${endTime}`;
 
     try {
       const res = await fetch(`/api/schedule/${editingId}`, {
@@ -83,7 +96,10 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
         headers: { 
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(editForm),
+        body: JSON.stringify({
+          ...editForm,
+          time: timeString
+        }),
       });
 
       const data = await res.json();
@@ -102,6 +118,8 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
       setIsEditModalOpen(false);
       setEditingId(null);
       setEditForm(null);
+      setStartTime(null);
+      setEndTime(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update schedule. Please try again.');
       setTimeout(() => setError(''), 3000);
@@ -114,6 +132,8 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
     setIsEditModalOpen(false);
     setEditingId(null);
     setEditForm(null);
+    setStartTime(null);
+    setEndTime(null);
   }
 
   function handleEditChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -124,14 +144,6 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
     if (name === 'units') {
       const numericValue = value.replace(/[^0-9]/g, '');
       setEditForm(prev => prev ? { ...prev, [name]: numericValue } : null);
-      return;
-    }
-
-    // Special handling for time input
-    if (name === 'time') {
-      // Only allow numbers, colon, and hyphen
-      const sanitizedValue = value.replace(/[^0-9:-]/g, '');
-      setEditForm(prev => prev ? { ...prev, [name]: sanitizedValue } : null);
       return;
     }
     
@@ -177,27 +189,26 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
                 </button>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-2 text-sm">
-              <div>
-                <span className="text-gray-500">Units:</span>
-                <span className="ml-1">{s.units}</span>
-              </div>
-              <div>
-                <span className="text-gray-500">Days:</span>
-                <span className="ml-1">{s.days}</span>
-              </div>
-              <div>
-                <span className="text-gray-500">Time:</span>
-                <span className="ml-1">{s.time}</span>
-              </div>
-              <div>
-                <span className="text-gray-500">Room:</span>
-                <span className="ml-1">{s.room}</span>
-              </div>
-              <div className="col-span-2">
-                <span className="text-gray-500">Instructor:</span>
-                <span className="ml-1">{s.instructor}</span>
-              </div>
+            
+            <div>
+              <span className="text-gray-500">Units:</span>
+              <span className="ml-1">{s.units}</span>
+            </div>
+            <div>
+              <span className="text-gray-500">Days:</span>
+              <span className="ml-1">{s.days}</span>
+            </div>
+            <div>
+              <span className="text-gray-500">Time:</span>
+              <span className="ml-1">{s.time}</span>
+            </div>
+            <div>
+              <span className="text-gray-500">Room:</span>
+              <span className="ml-1">{s.room}</span>
+            </div>
+            <div className="col-span-2">
+              <span className="text-gray-500">Instructor:</span>
+              <span className="ml-1">{s.instructor}</span>
             </div>
           </div>
         ))}
@@ -324,13 +335,30 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
                         className="w-full p-2 border rounded"
                       />
                     </div>
-                    <div>
-                      <input
-                        name="time"
-                        value={editForm?.time || ''}
-                        onChange={handleEditChange}
-                        placeholder="Time"
-                        className="w-full p-2 border rounded"
+                    <div className="space-y-2">
+                      <label className="block text-sm font-medium text-gray-700">Start Time</label>
+                      <TimePicker
+                        onChange={setStartTime}
+                        value={startTime}
+                        format="HH:mm"
+                        clearIcon={null}
+                        className="w-full"
+                        disableClock={false}
+                        isOpen={false}
+                        autoFocus={false}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="block text-sm font-medium text-gray-700">End Time</label>
+                      <TimePicker
+                        onChange={setEndTime}
+                        value={endTime}
+                        format="HH:mm"
+                        clearIcon={null}
+                        className="w-full"
+                        disableClock={false}
+                        isOpen={false}
+                        autoFocus={false}
                       />
                     </div>
                     <div>
