@@ -29,11 +29,23 @@ export default async function handler(
         { returnDocument: 'after' }
       );
 
-      if (!result) {
+      if (!result || !result.value) {
         return res.status(404).json({ error: 'Schedule not found' });
       }
 
-      return res.json(result);
+      // Return only the necessary fields
+      const schedule = result.value;
+      
+      return res.json({
+        _id: schedule._id.toString(),
+        courseCode: schedule.courseCode,
+        descriptiveTitle: schedule.descriptiveTitle,
+        units: schedule.units,
+        days: schedule.days,
+        time: schedule.time,
+        room: schedule.room,
+        instructor: schedule.instructor
+      });
     } catch (error) {
       console.error('Error updating schedule:', error);
       return res.status(500).json({ error: 'Failed to update schedule' });

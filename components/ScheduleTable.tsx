@@ -59,14 +59,6 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
   async function handleSaveEdit() {
     if (!editingId || !editForm) return;
 
-    // Optimistically update the UI first
-    onChange((prev) => {
-      const updated = prev.map(item => 
-        item._id === editingId ? { ...item, ...editForm } : item
-      );
-      return updated;
-    });
-
     try {
       const res = await fetch(`/api/schedule/${editingId}`, {
         method: 'PUT',
@@ -76,16 +68,16 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
         body: JSON.stringify(editForm),
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        const data = await res.json();
         throw new Error(data.error || 'Failed to update schedule');
       }
 
-      // Update with server response to ensure consistency
-      const updated = await res.json();
+      // Update the UI with the server response
       onChange((prev) => {
         const newSchedules = prev.map(item => 
-          item._id === editingId ? updated : item
+          item._id === editingId ? { ...item, ...data } : item
         );
         return newSchedules;
       });
@@ -94,14 +86,6 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
       setEditingId(null);
       setEditForm(null);
     } catch (err) {
-      // Revert the optimistic update on error
-      onChange((prev) => {
-        const originalSchedule = schedules.find(s => s._id === editingId);
-        if (!originalSchedule) return prev;
-        return prev.map(item => 
-          item._id === editingId ? originalSchedule : item
-        );
-      });
       setError(err instanceof Error ? err.message : 'Failed to update schedule. Please try again.');
       setTimeout(() => setError(''), 3000);
     }
