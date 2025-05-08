@@ -122,51 +122,107 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
           {error}
         </div>
       )}
-      <table className="min-w-full border border-gray-300">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="border p-2 text-left">Course Code</th>
-            <th className="border p-2 text-left">Descriptive Title</th>
-            <th className="border p-2 text-center">Units</th>
-            <th className="border p-2 text-center">Days</th>
-            <th className="border p-2 text-center">Time</th>
-            <th className="border p-2 text-center">Room</th>
-            <th className="border p-2 text-left">Instructor</th>
-            <th className="border p-2 text-left">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {schedules.map((s) => (
-            <tr key={s._id} className="hover:bg-gray-50">
-              <td className="border p-2">{s.courseCode}</td>
-              <td className="border p-2">{s.descriptiveTitle}</td>
-              <td className="border p-2 text-center">{s.units}</td>
-              <td className="border p-2 text-center">{s.days}</td>
-              <td className="border p-2 text-center">{s.time}</td>
-              <td className="border p-2 text-center">{s.room}</td>
-              <td className="border p-2">{s.instructor}</td>
-              <td className="border p-2">
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => handleEdit(s._id)}
-                    className="text-blue-600 hover:text-blue-800 cursor-pointer"
-                    title="Edit"
-                  >
-                    <PencilSquareIcon className="w-5 h-5" />
-                  </button>
-                  <button
-                    onClick={() => openDeleteModal(s._id)}
-                    className="text-red-600 hover:text-red-800 cursor-pointer"
-                    title="Delete"
-                  >
-                    <TrashIcon className="w-5 h-5" />
-                  </button>
-                </div>
-              </td>
+
+      {/* Mobile Card View */}
+      <div className="md:hidden space-y-4">
+        {schedules.map((s) => (
+          <div key={s._id} className="bg-white rounded-lg shadow p-4 space-y-3">
+            <div className="flex justify-between items-start">
+              <div>
+                <h3 className="font-semibold text-lg">{s.courseCode}</h3>
+                <p className="text-gray-600 text-sm">{s.descriptiveTitle}</p>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => handleEdit(s._id)}
+                  className="text-blue-600 hover:text-blue-800 cursor-pointer"
+                  title="Edit"
+                >
+                  <PencilSquareIcon className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={() => openDeleteModal(s._id)}
+                  className="text-red-600 hover:text-red-800 cursor-pointer"
+                  title="Delete"
+                >
+                  <TrashIcon className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-2 text-sm">
+              <div>
+                <span className="text-gray-500">Units:</span>
+                <span className="ml-1">{s.units}</span>
+              </div>
+              <div>
+                <span className="text-gray-500">Days:</span>
+                <span className="ml-1">{s.days}</span>
+              </div>
+              <div>
+                <span className="text-gray-500">Time:</span>
+                <span className="ml-1">{s.time}</span>
+              </div>
+              <div>
+                <span className="text-gray-500">Room:</span>
+                <span className="ml-1">{s.room}</span>
+              </div>
+              <div className="col-span-2">
+                <span className="text-gray-500">Instructor:</span>
+                <span className="ml-1">{s.instructor}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop Table View */}
+      <div className="hidden md:block">
+        <table className="min-w-full border border-gray-300">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="border p-2 text-left">Course Code</th>
+              <th className="border p-2 text-left">Descriptive Title</th>
+              <th className="border p-2 text-center">Units</th>
+              <th className="border p-2 text-center">Days</th>
+              <th className="border p-2 text-center">Time</th>
+              <th className="border p-2 text-center">Room</th>
+              <th className="border p-2 text-left">Instructor</th>
+              <th className="border p-2 text-left">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {schedules.map((s) => (
+              <tr key={s._id} className="hover:bg-gray-50">
+                <td className="border p-2">{s.courseCode}</td>
+                <td className="border p-2">{s.descriptiveTitle}</td>
+                <td className="border p-2 text-center">{s.units}</td>
+                <td className="border p-2 text-center">{s.days}</td>
+                <td className="border p-2 text-center">{s.time}</td>
+                <td className="border p-2 text-center">{s.room}</td>
+                <td className="border p-2">{s.instructor}</td>
+                <td className="border p-2">
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleEdit(s._id)}
+                      className="text-blue-600 hover:text-blue-800 cursor-pointer"
+                      title="Edit"
+                    >
+                      <PencilSquareIcon className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={() => openDeleteModal(s._id)}
+                      className="text-red-600 hover:text-red-800 cursor-pointer"
+                      title="Delete"
+                    >
+                      <TrashIcon className="w-5 h-5" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {/* Edit Modal */}
       <Transition appear show={isEditModalOpen} as={Fragment}>
