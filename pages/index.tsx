@@ -7,6 +7,7 @@ import { Fragment } from 'react';
 import { EnvelopeIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/router';
 
 type Schedule = {
   _id: string;
@@ -23,9 +24,16 @@ export default function Home() {
   const { data: session, status } = useSession();
   const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [error, setError] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
-    if (session?.user?.email) {
+    // Remove loading class when component mounts
+    document.documentElement.classList.remove('js-loading');
+    document.documentElement.classList.add('js-loaded');
+  }, []);
+
+  useEffect(() => {
+    if (status === 'authenticated') {
       async function fetchSchedules() {
         try {
           const res = await fetch(`/api/schedules?email=${session?.user?.email}`);
@@ -41,22 +49,14 @@ export default function Home() {
       }
       fetchSchedules();
     }
-  }, [session]);
+  }, [status, session]);
 
   function handleSchedulesChange(callback: (prev: Schedule[]) => Schedule[]) {
     setSchedules(callback);
   }
 
-  if (status === "loading") {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <motion.div 
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          className="rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"
-        />
-      </div>
-    );
+  if (status === 'loading') {
+    return null;
   }
 
   if (!session) {
@@ -136,7 +136,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <button
             onClick={() => window.location.reload()}
-            className="flex items-center gap-3 hover:opacity-80 transition-opacity cursor-pointer"
+            className="flex items-center gap-3 md:hover:opacity-80 transition-opacity cursor-pointer"
           >
             <Image
               src="/logo.png"

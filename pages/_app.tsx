@@ -5,14 +5,27 @@ import "@/styles/globals.css";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
-    <SessionProvider session={session} refetchInterval={0} refetchOnWindowFocus={false}>
+    <SessionProvider session={session} refetchInterval={0} refetchOnWindowFocus={false} refetchWhenOffline={false}>
       <Head>
         <title>Class Schedule</title>
         <meta name="description" content="Manage your schedule efficiently" />
+        <style jsx global>{`
+          .js-loading * {
+            visibility: hidden;
+          }
+          .js-loaded * {
+            visibility: visible;
+          }
+          noscript .js-loading * {
+            visibility: visible;
+          }
+        `}</style>
       </Head>
-      <Component {...pageProps} />
+      <div className="js-loading">
+        <Component {...pageProps} />
+      </div>
     </SessionProvider>
   );
 }
-
 export default MyApp;
+

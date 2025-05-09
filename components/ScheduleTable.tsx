@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PencilSquareIcon, TrashIcon, ChevronUpDownIcon } from '@heroicons/react/24/outline';
+import { PencilSquareIcon, TrashIcon, ChevronUpDownIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Dialog, Transition, Combobox } from '@headlessui/react';
 import { Fragment } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -229,7 +229,36 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
     }
   }
 
+  function hasEditChanges() {
+    if (!editForm || !editingId) return false;
+    
+    const originalSchedule = schedules.find(s => s._id === editingId);
+    if (!originalSchedule) return false;
+
+    return (
+      originalSchedule.courseCode !== editForm.courseCode ||
+      originalSchedule.descriptiveTitle !== editForm.descriptiveTitle ||
+      originalSchedule.units !== editForm.units ||
+      originalSchedule.days !== editForm.days ||
+      originalSchedule.room !== editForm.room ||
+      originalSchedule.instructor !== editForm.instructor ||
+      originalSchedule.time !== `${startTime}-${endTime}`
+    );
+  }
+
   function handleCancelEdit() {
+    if (hasEditChanges()) {
+      // Don't close if there are changes
+      return;
+    }
+    setIsEditModalOpen(false);
+    setEditingId(null);
+    setEditForm(null);
+    setStartTime(null);
+    setEndTime(null);
+  }
+
+  function handleForceClose() {
     setIsEditModalOpen(false);
     setEditingId(null);
     setEditForm(null);
@@ -264,22 +293,23 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
           {schedules.map((s, index) => (
             <motion.div
               key={s._id}
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
+              viewport={{ once: true, margin: "0px" }}
               transition={{ 
-                duration: 0.5,
-                delay: index * 0.1,
+                duration: 0.3,
+                delay: index * 0.05,
                 type: "spring",
-                stiffness: 100
+                stiffness: 200,
+                damping: 20
               }}
               className="bg-white rounded-lg shadow p-4"
             >
               <motion.div 
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
-                transition={{ delay: 0.2 }}
+                transition={{ duration: 0.2 }}
                 className="flex justify-between items-start mb-3"
               >
                 <div>
@@ -287,22 +317,22 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
                   <p className="text-gray-600 text-sm">{s.descriptiveTitle}</p>
                 </div>
                 <motion.div 
-                  className="flex gap-2"
+                  className="flex gap-1"
                   initial={{ opacity: 0 }}
                   whileInView={{ opacity: 1 }}
                   viewport={{ once: true }}
-                  transition={{ delay: 0.3 }}
+                  transition={{ duration: 0.2 }}
                 >
                   <button
                     onClick={() => handleEdit(s._id)}
-                    className="text-blue-600 hover:text-blue-800 cursor-pointer"
+                    className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors cursor-pointer"
                     title="Edit"
                   >
                     <PencilSquareIcon className="w-5 h-5" />
                   </button>
                   <button
                     onClick={() => openDeleteModal(s._id)}
-                    className="text-red-600 hover:text-red-800 cursor-pointer"
+                    className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors cursor-pointer"
                     title="Delete"
                   >
                     <TrashIcon className="w-5 h-5" />
@@ -314,7 +344,7 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
-                transition={{ delay: 0.4 }}
+                transition={{ duration: 0.2 }}
                 className="grid grid-cols-2 gap-2 text-sm"
               >
                 <div>
@@ -387,17 +417,17 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
                   <td className="border p-2 text-center">{s.room}</td>
                   <td className="border p-2">{s.instructor}</td>
                   <td className="border p-2">
-                    <div className="flex gap-2">
+                    <div className="flex gap-1">
                       <button
                         onClick={() => handleEdit(s._id)}
-                        className="text-blue-600 hover:text-blue-800 cursor-pointer"
+                        className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors cursor-pointer"
                         title="Edit"
                       >
                         <PencilSquareIcon className="w-5 h-5" />
                       </button>
                       <button
                         onClick={() => openDeleteModal(s._id)}
-                        className="text-red-600 hover:text-red-800 cursor-pointer"
+                        className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors cursor-pointer"
                         title="Delete"
                       >
                         <TrashIcon className="w-5 h-5" />
@@ -413,7 +443,11 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
 
       {/* Edit Modal */}
       <Transition appear show={isEditModalOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={handleCancelEdit}>
+        <Dialog 
+          as="div" 
+          className="relative z-10" 
+          onClose={handleCancelEdit}
+        >
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -437,10 +471,16 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all relative">
+                  <button
+                    onClick={handleForceClose}
+                    className="absolute top-4 right-4 text-gray-400 hover:text-gray-500 focus:outline-none"
+                  >
+                    <XMarkIcon className="h-6 w-6" />
+                  </button>
                   <Dialog.Title
                     as="h3"
-                    className="text-lg font-medium leading-6 text-gray-900 mb-4"
+                    className="text-lg font-medium leading-6 text-gray-900 mb-4 pr-8"
                   >
                     Edit Schedule
                   </Dialog.Title>
@@ -580,15 +620,7 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
                     </div>
                   </div>
 
-                  <div className="mt-6 flex justify-end gap-3">
-                    <button
-                      type="button"
-                      disabled={isSaving}
-                      className="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                      onClick={handleCancelEdit}
-                    >
-                      Cancel
-                    </button>
+                  <div className="mt-6 flex justify-end">
                     <button
                       type="button"
                       disabled={isSaving}

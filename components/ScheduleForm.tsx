@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Dialog, Transition, Combobox } from '@headlessui/react';
 import { Fragment } from 'react';
-import { PlusIcon, ChevronUpDownIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, ChevronUpDownIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
 import 'react-time-picker/dist/TimePicker.css';
 import 'react-clock/dist/Clock.css';
@@ -93,11 +93,6 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
         return parseTimeToMinutes(time) > parseTimeToMinutes(startTime);
       });
 
-  function validateDays(days: string) {
-    const validPatterns = ['MWF', 'TTH', 'M', 'T', 'W', 'TH', 'F', 'S'];
-    return validPatterns.includes(days.toUpperCase());
-  }
-
   function validateUnits(units: string) {
     return !isNaN(Number(units)) && Number(units) > 0;
   }
@@ -109,12 +104,6 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
 
     if (!startTime || !endTime) {
       setError('Please select both start and end times');
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (!validateDays(formData.days)) {
-      setError('Please enter valid days (MWF, TTH, M, T, W, TH, F, S)');
       setIsSubmitting(false);
       return;
     }
@@ -408,24 +397,25 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
     <motion.form 
       onSubmit={handleSubmit} 
       className="space-y-4"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
     >
       {error && (
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.2 }}
           className="p-2 bg-red-100 text-red-700 rounded"
         >
           {error}
         </motion.div>
       )}
       <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        whileInView={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.3, delay: 0.1 }}
+        transition={{ duration: 0.2 }}
       >
         <input
           name="courseCode"
@@ -437,10 +427,10 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
         />
       </motion.div>
       <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        whileInView={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.3, delay: 0.2 }}
+        transition={{ duration: 0.2 }}
       >
         <input
           name="descriptiveTitle"
@@ -452,10 +442,10 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
         />
       </motion.div>
       <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        whileInView={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.3, delay: 0.3 }}
+        transition={{ duration: 0.2 }}
       >
         <input
           name="units"
@@ -469,10 +459,10 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
         />
       </motion.div>
       <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        whileInView={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.3, delay: 0.4 }}
+        transition={{ duration: 0.2 }}
       >
         <input
           name="days"
@@ -485,10 +475,10 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
       </motion.div>
       <motion.div 
         className="space-y-2"
-        initial={{ opacity: 0, x: -20 }}
-        whileInView={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.3, delay: 0.5 }}
+        transition={{ duration: 0.2 }}
       >
         <label className="block text-sm font-medium text-gray-700">Start Time</label>
         <Combobox value={startTime} onChange={(value) => {
@@ -526,10 +516,10 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
       </motion.div>
       <motion.div 
         className="space-y-2"
-        initial={{ opacity: 0, x: -20 }}
-        whileInView={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.3, delay: 0.6 }}
+        transition={{ duration: 0.2 }}
       >
         <label className="block text-sm font-medium text-gray-700">End Time</label>
         <Combobox value={endTime} onChange={setEndTime} disabled={!startTime}>
@@ -563,10 +553,10 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
         </Combobox>
       </motion.div>
       <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        whileInView={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.3, delay: 0.7 }}
+        transition={{ duration: 0.2 }}
       >
         <input
           name="room"
@@ -578,10 +568,10 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
         />
       </motion.div>
       <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        whileInView={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.3, delay: 0.8 }}
+        transition={{ duration: 0.2 }}
       >
         <input
           name="instructor"
@@ -595,21 +585,9 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
       
       <div className="flex gap-3">
         <motion.button
-          type="button"
-          onClick={() => setIsModalOpen(false)}
-          disabled={isSubmitting}
-          className="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded hover:bg-gray-200 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.3, delay: 0.9 }}
-        >
-          Cancel
-        </motion.button>
-        <motion.button
           type="submit"
           disabled={isSubmitting}
-          className="flex-1 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -620,6 +598,10 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
       </div>
     </motion.form>
   );
+
+  const hasFormValues = () => {
+    return Object.values(formData).some(value => value !== '') || startTime || endTime;
+  };
 
   return (
     <>
@@ -647,7 +629,15 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
 
       {/* Mobile Modal */}
       <Transition appear show={isModalOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={() => setIsModalOpen(false)}>
+        <Dialog 
+          as="div" 
+          className="relative z-10" 
+          onClose={() => {
+            if (!hasFormValues()) {
+              setIsModalOpen(false);
+            }
+          }}
+        >
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -671,10 +661,16 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all relative">
+                  <button
+                    onClick={() => setIsModalOpen(false)}
+                    className="absolute top-4 right-4 text-gray-400 hover:text-gray-500 focus:outline-none"
+                  >
+                    <XMarkIcon className="h-6 w-6" />
+                  </button>
                   <Dialog.Title
                     as="h3"
-                    className="text-lg font-medium leading-6 text-gray-900 mb-4"
+                    className="text-lg font-medium leading-6 text-gray-900 mb-4 pr-8"
                   >
                     Add New Schedule
                   </Dialog.Title>
