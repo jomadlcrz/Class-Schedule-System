@@ -1,5 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import clientPromise from '../../../lib/mongodb';
+import { ObjectId } from 'mongodb';
+
+interface DuplicateQuery {
+  $or: Array<{
+    courseCode?: string;
+    descriptiveTitle?: string;
+  }>;
+  _id?: {
+    $ne: ObjectId;
+  };
+}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -12,16 +23,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const db = client.db();
 
     // Build query to check for duplicates
-    const query: any = {
+    const query: DuplicateQuery = {
       $or: [
-        { courseCode: courseCode },
-        { descriptiveTitle: descriptiveTitle }
+        { courseCode },
+        { descriptiveTitle }
       ]
     };
 
     // If excludeId is provided (for edit case), exclude that document from the check
     if (excludeId) {
-      query._id = { $ne: excludeId };
+      query._id = { $ne: new ObjectId(excludeId) };
     }
 
     const existingSchedule = await db.collection('schedules').findOne(query);
