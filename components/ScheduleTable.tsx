@@ -328,6 +328,9 @@ export default function ScheduleTable({
     if (!editForm) return;
     const { name, value } = e.target;
     
+    // Clear error when input changes
+    setError('');
+    
     // Prevent non-numeric input for units
     if (name === 'units') {
       const numericValue = value.replace(/[^0-9]/g, '');
