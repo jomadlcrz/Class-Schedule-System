@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { Dialog, Transition } from '@headlessui/react';
+import { PencilSquareIcon, TrashIcon, ChevronUpDownIcon } from '@heroicons/react/24/outline';
+import { Dialog, Transition, Combobox } from '@headlessui/react';
 import { Fragment } from 'react';
-import TimePicker from 'react-time-picker';
 import { motion, AnimatePresence } from 'framer-motion';
 import 'react-time-picker/dist/TimePicker.css';
 import 'react-clock/dist/Clock.css';
@@ -18,16 +17,43 @@ type Schedule = {
   instructor: string;
 };
 
+function generateTimeOptions() {
+  const times = [];
+  for (let hour = 7; hour <= 20; hour++) {
+    for (let minute = 0; minute < 60; minute += 30) {
+      const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+      times.push(time);
+    }
+  }
+  return times;
+}
+
 export default function ScheduleTable({ schedules, onChange }: { schedules: Schedule[], onChange: (callback: (prev: Schedule[]) => Schedule[]) => void }) {
   const [error, setError] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<Schedule | null>(null);
   const [startTime, setStartTime] = useState<string | null>(null);
   const [endTime, setEndTime] = useState<string | null>(null);
+  const [startTimeQuery, setStartTimeQuery] = useState('');
+  const [endTimeQuery, setEndTimeQuery] = useState('');
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+
+  const timeOptions = generateTimeOptions();
+
+  const filteredStartTimes = startTimeQuery === ''
+    ? timeOptions
+    : timeOptions.filter((time) =>
+        time.toLowerCase().includes(startTimeQuery.toLowerCase())
+      );
+
+  const filteredEndTimes = endTimeQuery === ''
+    ? timeOptions
+    : timeOptions.filter((time) =>
+        time.toLowerCase().includes(endTimeQuery.toLowerCase())
+      );
 
   function parseTime(timeString: string): { start: string | null; end: string | null } {
     const [start, end] = timeString.split('-');
@@ -396,29 +422,65 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
                     </div>
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-gray-700">Start Time</label>
-                      <TimePicker
-                        onChange={setStartTime}
-                        value={startTime}
-                        format="HH:mm"
-                        clearIcon={null}
-                        className="w-full"
-                        disableClock={true}
-                        isOpen={false}
-                        autoFocus={false}
-                      />
+                      <Combobox value={startTime} onChange={setStartTime}>
+                        <div className="relative">
+                          <Combobox.Input
+                            className="w-full p-2 border rounded"
+                            onChange={(event) => setStartTimeQuery(event.target.value)}
+                            displayValue={(time: string) => time || ''}
+                            placeholder="Select start time"
+                          />
+                          <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
+                            <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                          </Combobox.Button>
+                          <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                            {filteredStartTimes.map((time) => (
+                              <Combobox.Option
+                                key={time}
+                                value={time}
+                                className={({ active }) =>
+                                  `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                                    active ? 'bg-blue-600 text-white' : 'text-gray-900'
+                                  }`
+                                }
+                              >
+                                {time}
+                              </Combobox.Option>
+                            ))}
+                          </Combobox.Options>
+                        </div>
+                      </Combobox>
                     </div>
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-gray-700">End Time</label>
-                      <TimePicker
-                        onChange={setEndTime}
-                        value={endTime}
-                        format="HH:mm"
-                        clearIcon={null}
-                        className="w-full"
-                        disableClock={true}
-                        isOpen={false}
-                        autoFocus={false}
-                      />
+                      <Combobox value={endTime} onChange={setEndTime}>
+                        <div className="relative">
+                          <Combobox.Input
+                            className="w-full p-2 border rounded"
+                            onChange={(event) => setEndTimeQuery(event.target.value)}
+                            displayValue={(time: string) => time || ''}
+                            placeholder="Select end time"
+                          />
+                          <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
+                            <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                          </Combobox.Button>
+                          <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                            {filteredEndTimes.map((time) => (
+                              <Combobox.Option
+                                key={time}
+                                value={time}
+                                className={({ active }) =>
+                                  `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                                    active ? 'bg-blue-600 text-white' : 'text-gray-900'
+                                  }`
+                                }
+                              >
+                                {time}
+                              </Combobox.Option>
+                            ))}
+                          </Combobox.Options>
+                        </div>
+                      </Combobox>
                     </div>
                     <div>
                       <input
