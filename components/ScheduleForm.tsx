@@ -286,7 +286,11 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
         transition={{ duration: 0.3, delay: 0.5 }}
       >
         <label className="block text-sm font-medium text-gray-700">Start Time</label>
-        <Combobox value={startTime} onChange={setStartTime}>
+        <Combobox value={startTime} onChange={(value) => {
+          setStartTime(value);
+          setEndTime(null);
+          setEndTimeQuery('');
+        }}>
           <div className="relative">
             <Combobox.Input
               className="w-full p-2 border rounded"
@@ -323,16 +327,17 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
         transition={{ duration: 0.3, delay: 0.6 }}
       >
         <label className="block text-sm font-medium text-gray-700">End Time</label>
-        <Combobox value={endTime} onChange={setEndTime}>
+        <Combobox value={endTime} onChange={setEndTime} disabled={!startTime}>
           <div className="relative">
             <Combobox.Input
-              className="w-full p-2 border rounded"
+              className={`w-full p-2 border rounded ${!startTime ? 'bg-gray-100 cursor-not-allowed' : ''}`}
               onChange={(event) => setEndTimeQuery(event.target.value)}
               displayValue={(time: string) => time || ''}
-              placeholder="Select end time"
+              placeholder={startTime ? "Select end time" : "Select start time first"}
+              disabled={!startTime}
             />
             <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
-              <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+              <ChevronUpDownIcon className={`h-5 w-5 ${!startTime ? 'text-gray-300' : 'text-gray-400'}`} aria-hidden="true" />
             </Combobox.Button>
             <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
               {filteredEndTimes.map((time) => (
@@ -484,7 +489,11 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
         transition={{ duration: 0.3, delay: 0.5 }}
       >
         <label className="block text-sm font-medium text-gray-700">Start Time</label>
-        <Combobox value={startTime} onChange={setStartTime}>
+        <Combobox value={startTime} onChange={(value) => {
+          setStartTime(value);
+          setEndTime(null);
+          setEndTimeQuery('');
+        }}>
           <div className="relative">
             <Combobox.Input
               className="w-full p-2 border rounded"
@@ -521,16 +530,17 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
         transition={{ duration: 0.3, delay: 0.6 }}
       >
         <label className="block text-sm font-medium text-gray-700">End Time</label>
-        <Combobox value={endTime} onChange={setEndTime}>
+        <Combobox value={endTime} onChange={setEndTime} disabled={!startTime}>
           <div className="relative">
             <Combobox.Input
-              className="w-full p-2 border rounded"
+              className={`w-full p-2 border rounded ${!startTime ? 'bg-gray-100 cursor-not-allowed' : ''}`}
               onChange={(event) => setEndTimeQuery(event.target.value)}
               displayValue={(time: string) => time || ''}
-              placeholder="Select end time"
+              placeholder={startTime ? "Select end time" : "Select start time first"}
+              disabled={!startTime}
             />
             <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
-              <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+              <ChevronUpDownIcon className={`h-5 w-5 ${!startTime ? 'text-gray-300' : 'text-gray-400'}`} aria-hidden="true" />
             </Combobox.Button>
             <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
               {filteredEndTimes.map((time) => (
