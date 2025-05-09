@@ -17,6 +17,9 @@ type Schedule = {
   instructor: string;
 };
 
+type SortField = 'courseCode' | 'descriptiveTitle' | 'units' | 'days' | 'time' | 'room' | 'instructor';
+type SortDirection = 'asc' | 'desc';
+
 function generateTimeOptions() {
   const times = [];
   for (let hour = 7; hour <= 20; hour++) {
@@ -30,7 +33,28 @@ function generateTimeOptions() {
   return times;
 }
 
-export default function ScheduleTable({ schedules, onChange }: { schedules: Schedule[], onChange: (callback: (prev: Schedule[]) => Schedule[]) => void }) {
+function parseTimeToMinutes(timeStr: string): number {
+  const [time, period] = timeStr.split(' ');
+  const [hours, minutes] = time.split(':').map(Number);
+  let totalMinutes = hours * 60 + minutes;
+  if (period === 'PM' && hours !== 12) totalMinutes += 12 * 60;
+  if (period === 'AM' && hours === 12) totalMinutes -= 12 * 60;
+  return totalMinutes;
+}
+
+export default function ScheduleTable({ 
+  schedules, 
+  onChange,
+  sortField,
+  sortDirection,
+  onSort
+}: { 
+  schedules: Schedule[], 
+  onChange: (callback: (prev: Schedule[]) => Schedule[]) => void,
+  sortField: SortField,
+  sortDirection: SortDirection,
+  onSort: (field: SortField) => void
+}) {
   const [error, setError] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<Schedule | null>(null);
@@ -86,6 +110,40 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
     const [start, end] = timeString.split('-');
     return { start: start || null, end: end || null };
   }
+
+  const sortedSchedules = [...schedules].sort((a, b) => {
+    const aValue = a[sortField];
+    const bValue = b[sortField];
+    
+    if (sortField === 'units') {
+      const aNum = parseInt(aValue);
+      const bNum = parseInt(bValue);
+      return sortDirection === 'asc' ? aNum - bNum : bNum - aNum;
+    }
+    
+    if (sortField === 'time') {
+      const [aStart] = aValue.split('-');
+      const [bStart] = bValue.split('-');
+      const aMinutes = parseTimeToMinutes(aStart);
+      const bMinutes = parseTimeToMinutes(bStart);
+      return sortDirection === 'asc' ? aMinutes - bMinutes : bMinutes - aMinutes;
+    }
+    
+    if (sortDirection === 'asc') {
+      return aValue.localeCompare(bValue);
+    } else {
+      return bValue.localeCompare(aValue);
+    }
+  });
+
+  const SortIcon = ({ field }: { field: SortField }) => {
+    if (field !== sortField) return null;
+    return (
+      <ChevronUpDownIcon 
+        className={`w-4 h-4 ml-1 inline-block ${sortDirection === 'asc' ? 'rotate-180' : ''}`}
+      />
+    );
+  };
 
   async function handleDelete(id: string) {
     if (!id) {
@@ -290,7 +348,7 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
       {/* Mobile Card View */}
       <div className="md:hidden space-y-4">
         <AnimatePresence>
-          {schedules.map((s, index) => (
+          {sortedSchedules.map((s, index) => (
             <motion.div
               key={s._id}
               initial={{ opacity: 0, y: 20 }}
@@ -388,19 +446,54 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
             className="bg-gray-100"
           >
             <tr>
-              <th className="border p-2 text-left">Course Code</th>
-              <th className="border p-2 text-left">Descriptive Title</th>
-              <th className="border p-2 text-center">Units</th>
-              <th className="border p-2 text-center">Days</th>
-              <th className="border p-2 text-center">Time</th>
-              <th className="border p-2 text-center">Room</th>
-              <th className="border p-2 text-left">Instructor</th>
+              <th 
+                className="border p-2 text-left cursor-pointer hover:bg-gray-200"
+                onClick={() => onSort('courseCode')}
+              >
+                Course Code <SortIcon field="courseCode" />
+              </th>
+              <th 
+                className="border p-2 text-left cursor-pointer hover:bg-gray-200"
+                onClick={() => onSort('descriptiveTitle')}
+              >
+                Descriptive Title <SortIcon field="descriptiveTitle" />
+              </th>
+              <th 
+                className="border p-2 text-center cursor-pointer hover:bg-gray-200"
+                onClick={() => onSort('units')}
+              >
+                Units <SortIcon field="units" />
+              </th>
+              <th 
+                className="border p-2 text-center cursor-pointer hover:bg-gray-200"
+                onClick={() => onSort('days')}
+              >
+                Days <SortIcon field="days" />
+              </th>
+              <th 
+                className="border p-2 text-center cursor-pointer hover:bg-gray-200"
+                onClick={() => onSort('time')}
+              >
+                Time <SortIcon field="time" />
+              </th>
+              <th 
+                className="border p-2 text-center cursor-pointer hover:bg-gray-200"
+                onClick={() => onSort('room')}
+              >
+                Room <SortIcon field="room" />
+              </th>
+              <th 
+                className="border p-2 text-left cursor-pointer hover:bg-gray-200"
+                onClick={() => onSort('instructor')}
+              >
+                Instructor <SortIcon field="instructor" />
+              </th>
               <th className="border p-2 text-left">Actions</th>
             </tr>
           </motion.thead>
           <tbody>
             <AnimatePresence>
-              {schedules.map((s, index) => (
+              {sortedSchedules.map((s, index) => (
                 <motion.tr
                   key={s._id}
                   initial={{ opacity: 0, x: -20 }}

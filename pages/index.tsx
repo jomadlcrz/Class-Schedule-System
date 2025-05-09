@@ -4,7 +4,7 @@ import ScheduleForm from "../components/ScheduleForm";
 import ScheduleTable from "../components/ScheduleTable";
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
-import { EnvelopeIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
+import { EnvelopeIcon, ArrowRightOnRectangleIcon, ChevronUpDownIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
@@ -20,10 +20,27 @@ type Schedule = {
   instructor: string;
 };
 
+type SortField = 'courseCode' | 'descriptiveTitle' | 'units' | 'days' | 'time' | 'room' | 'instructor';
+type SortDirection = 'asc' | 'desc';
+
 export default function Home() {
   const { data: session, status } = useSession();
   const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [error, setError] = useState('');
+  const [sortField, setSortField] = useState<SortField>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('sortField');
+      return (saved as SortField) || 'courseCode';
+    }
+    return 'courseCode';
+  });
+  const [sortDirection, setSortDirection] = useState<SortDirection>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('sortDirection');
+      return (saved as SortDirection) || 'asc';
+    }
+    return 'asc';
+  });
   const router = useRouter();
 
   useEffect(() => {
@@ -51,9 +68,36 @@ export default function Home() {
     }
   }, [status, session]);
 
+  // Save sort preferences to localStorage whenever they change
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('sortField', sortField);
+      localStorage.setItem('sortDirection', sortDirection);
+    }
+  }, [sortField, sortDirection]);
+
   function handleSchedulesChange(callback: (prev: Schedule[]) => Schedule[]) {
     setSchedules(callback);
   }
+
+  const sortOptions = [
+    { label: 'Course Code', value: 'courseCode' },
+    { label: 'Descriptive Title', value: 'descriptiveTitle' },
+    { label: 'Units', value: 'units' },
+    { label: 'Days', value: 'days' },
+    { label: 'Time', value: 'time' },
+    { label: 'Room', value: 'room' },
+    { label: 'Instructor', value: 'instructor' },
+  ];
+
+  const handleSort = (field: SortField) => {
+    if (field === sortField) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
 
   if (status === 'loading') {
     return null;
@@ -266,11 +310,58 @@ export default function Home() {
             className="md:col-span-2"
           >
             <div className="bg-white rounded-lg shadow">
-              <div className="p-4 border-b">
+              <div className="p-4 border-b flex justify-between items-center">
                 <h2 className="text-lg font-semibold">Your Schedule</h2>
+                <Menu as="div" className="relative">
+                  <Menu.Button className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors">
+                    Sort by: {sortOptions.find(opt => opt.value === sortField)?.label}
+                    <ChevronUpDownIcon className="w-4 h-4" />
+                  </Menu.Button>
+                  <Transition
+                    as={Fragment}
+                    enter="transition ease-out duration-100"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95"
+                  >
+                    <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+                      <div className="py-1">
+                        {sortOptions.map((option) => (
+                          <Menu.Item key={option.value}>
+                            {({ active }) => (
+                              <button
+                                onClick={() => handleSort(option.value as SortField)}
+                                className={`${
+                                  active ? 'bg-gray-100' : ''
+                                } ${
+                                  sortField === option.value ? 'text-blue-600' : 'text-gray-700'
+                                } flex w-full items-center px-4 py-2 text-sm`}
+                              >
+                                {option.label}
+                                {sortField === option.value && (
+                                  <span className="ml-2 text-xs text-gray-500">
+                                    ({sortDirection === 'asc' ? '↑' : '↓'})
+                                  </span>
+                                )}
+                              </button>
+                            )}
+                          </Menu.Item>
+                        ))}
+                      </div>
+                    </Menu.Items>
+                  </Transition>
+                </Menu>
               </div>
               <div className="p-4">
-                <ScheduleTable schedules={schedules} onChange={handleSchedulesChange} />
+                <ScheduleTable 
+                  schedules={schedules} 
+                  onChange={handleSchedulesChange}
+                  sortField={sortField}
+                  sortDirection={sortDirection}
+                  onSort={handleSort}
+                />
               </div>
             </div>
           </motion.div>
