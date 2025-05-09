@@ -102,22 +102,6 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
     return !isNaN(Number(units)) && Number(units) > 0;
   }
 
-  function validateTime(start: string, end: string) {
-    const parseTimeToMinutes = (timeStr: string) => {
-      const [time, period] = timeStr.split(' ');
-      const [hours, minutes] = time.split(':').map(Number);
-      let totalMinutes = hours * 60 + minutes;
-      if (period === 'PM' && hours !== 12) totalMinutes += 12 * 60;
-      if (period === 'AM' && hours === 12) totalMinutes -= 12 * 60;
-      return totalMinutes;
-    };
-
-    const startTotalMinutes = parseTimeToMinutes(start);
-    const endTotalMinutes = parseTimeToMinutes(end);
-    
-    return startTotalMinutes < endTotalMinutes;
-  }
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError('');

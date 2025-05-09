@@ -83,22 +83,6 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
     return { start: start || null, end: end || null };
   }
 
-  function validateTime(start: string, end: string) {
-    const parseTimeToMinutes = (timeStr: string) => {
-      const [time, period] = timeStr.split(' ');
-      const [hours, minutes] = time.split(':').map(Number);
-      let totalMinutes = hours * 60 + minutes;
-      if (period === 'PM' && hours !== 12) totalMinutes += 12 * 60;
-      if (period === 'AM' && hours === 12) totalMinutes -= 12 * 60;
-      return totalMinutes;
-    };
-
-    const startTotalMinutes = parseTimeToMinutes(start);
-    const endTotalMinutes = parseTimeToMinutes(end);
-    
-    return startTotalMinutes < endTotalMinutes;
-  }
-
   async function handleDelete(id: string) {
     if (!id) {
       setError('Invalid schedule ID');
