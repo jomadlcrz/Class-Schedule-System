@@ -31,7 +31,9 @@ function generateTimeOptions() {
   const times = [];
   for (let hour = 7; hour <= 20; hour++) {
     for (let minute = 0; minute < 60; minute += 30) {
-      const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+      const period = hour >= 12 ? 'PM' : 'AM';
+      const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
+      const time = `${displayHour}:${minute.toString().padStart(2, '0')} ${period}`;
       times.push(time);
     }
   }
@@ -65,10 +67,31 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
       );
 
   const filteredEndTimes = endTimeQuery === ''
-    ? timeOptions
-    : timeOptions.filter((time) =>
-        time.toLowerCase().includes(endTimeQuery.toLowerCase())
-      );
+    ? timeOptions.filter(time => {
+        if (!startTime) return true;
+        const parseTimeToMinutes = (timeStr: string) => {
+          const [time, period] = timeStr.split(' ');
+          const [hours, minutes] = time.split(':').map(Number);
+          let totalMinutes = hours * 60 + minutes;
+          if (period === 'PM' && hours !== 12) totalMinutes += 12 * 60;
+          if (period === 'AM' && hours === 12) totalMinutes -= 12 * 60;
+          return totalMinutes;
+        };
+        return parseTimeToMinutes(time) > parseTimeToMinutes(startTime);
+      })
+    : timeOptions.filter((time) => {
+        if (!time.toLowerCase().includes(endTimeQuery.toLowerCase())) return false;
+        if (!startTime) return true;
+        const parseTimeToMinutes = (timeStr: string) => {
+          const [time, period] = timeStr.split(' ');
+          const [hours, minutes] = time.split(':').map(Number);
+          let totalMinutes = hours * 60 + minutes;
+          if (period === 'PM' && hours !== 12) totalMinutes += 12 * 60;
+          if (period === 'AM' && hours === 12) totalMinutes -= 12 * 60;
+          return totalMinutes;
+        };
+        return parseTimeToMinutes(time) > parseTimeToMinutes(startTime);
+      });
 
   function validateDays(days: string) {
     const validPatterns = ['MWF', 'TTH', 'M', 'T', 'W', 'TH', 'F', 'S'];
@@ -77,6 +100,22 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
 
   function validateUnits(units: string) {
     return !isNaN(Number(units)) && Number(units) > 0;
+  }
+
+  function validateTime(start: string, end: string) {
+    const parseTimeToMinutes = (timeStr: string) => {
+      const [time, period] = timeStr.split(' ');
+      const [hours, minutes] = time.split(':').map(Number);
+      let totalMinutes = hours * 60 + minutes;
+      if (period === 'PM' && hours !== 12) totalMinutes += 12 * 60;
+      if (period === 'AM' && hours === 12) totalMinutes -= 12 * 60;
+      return totalMinutes;
+    };
+
+    const startTotalMinutes = parseTimeToMinutes(start);
+    const endTotalMinutes = parseTimeToMinutes(end);
+    
+    return startTotalMinutes < endTotalMinutes;
   }
 
   async function handleSubmit(e: React.FormEvent) {
