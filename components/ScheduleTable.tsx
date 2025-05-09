@@ -62,7 +62,9 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
           if (period === 'AM' && hours === 12) totalMinutes -= 12 * 60;
           return totalMinutes;
         };
-        return parseTimeToMinutes(time) > parseTimeToMinutes(startTime);
+        const startMinutes = parseTimeToMinutes(startTime);
+        const endMinutes = parseTimeToMinutes(time);
+        return endMinutes > startMinutes;
       })
     : timeOptions.filter((time) => {
         if (!time.toLowerCase().includes(endTimeQuery.toLowerCase())) return false;
@@ -75,7 +77,9 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
           if (period === 'AM' && hours === 12) totalMinutes -= 12 * 60;
           return totalMinutes;
         };
-        return parseTimeToMinutes(time) > parseTimeToMinutes(startTime);
+        const startMinutes = parseTimeToMinutes(startTime);
+        const endMinutes = parseTimeToMinutes(time);
+        return endMinutes > startMinutes;
       });
 
   function parseTime(timeString: string): { start: string | null; end: string | null } {
