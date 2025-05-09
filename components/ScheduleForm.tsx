@@ -125,9 +125,27 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
       return;
     }
 
-    const timeString = `${startTime}-${endTime}`;
-
+    // Check for duplicates
     try {
+      const checkRes = await fetch('/api/schedule/check-duplicates', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          courseCode: formData.courseCode,
+          descriptiveTitle: formData.descriptiveTitle
+        }),
+      });
+
+      const { isDuplicate, field } = await checkRes.json();
+      
+      if (isDuplicate) {
+        setError(`${field} already exists. Please use a different ${field.toLowerCase()}.`);
+        setIsSubmitting(false);
+        return;
+      }
+
+      const timeString = `${startTime}-${endTime}`;
+
       const res = await fetch('/api/schedule', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

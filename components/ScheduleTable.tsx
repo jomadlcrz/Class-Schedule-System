@@ -136,15 +136,62 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
     if (!editingId || !editForm) return;
     setIsSaving(true);
 
+    // Find the original schedule
+    const originalSchedule = schedules.find(s => s._id === editingId);
+    if (!originalSchedule) {
+      setError('Schedule not found');
+      setIsSaving(false);
+      return;
+    }
+
+    // Check if there are any changes
+    const hasChanges = 
+      originalSchedule.courseCode !== editForm.courseCode ||
+      originalSchedule.descriptiveTitle !== editForm.descriptiveTitle ||
+      originalSchedule.units !== editForm.units ||
+      originalSchedule.days !== editForm.days ||
+      originalSchedule.room !== editForm.room ||
+      originalSchedule.instructor !== editForm.instructor ||
+      originalSchedule.time !== `${startTime}-${endTime}`;
+
+    if (!hasChanges) {
+      setIsEditModalOpen(false);
+      setEditingId(null);
+      setEditForm(null);
+      setStartTime(null);
+      setEndTime(null);
+      setIsSaving(false);
+      return;
+    }
+
     if (!startTime || !endTime) {
       setError('Please select both start and end times');
       setIsSaving(false);
       return;
     }
 
-    const timeString = `${startTime}-${endTime}`;
-
+    // Check for duplicates, excluding the current schedule being edited
     try {
+      const checkRes = await fetch('/api/schedule/check-duplicates', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          courseCode: editForm.courseCode,
+          descriptiveTitle: editForm.descriptiveTitle,
+          excludeId: editingId // Exclude current schedule from duplicate check
+        }),
+      });
+
+      const { isDuplicate, field } = await checkRes.json();
+      
+      if (isDuplicate) {
+        setError(`${field} already exists. Please use a different ${field.toLowerCase()}.`);
+        setIsSaving(false);
+        return;
+      }
+
+      const timeString = `${startTime}-${endTime}`;
+
       const res = await fetch(`/api/schedule/${editingId}`, {
         method: 'PUT',
         headers: { 
@@ -211,17 +258,6 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
 
   return (
     <div>
-      {error && (
-        <motion.div 
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          className="mb-4 p-2 bg-red-100 text-red-700 rounded"
-        >
-          {error}
-        </motion.div>
-      )}
-
       {/* Mobile Card View */}
       <div className="md:hidden space-y-4">
         <AnimatePresence>
@@ -408,6 +444,16 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
                   >
                     Edit Schedule
                   </Dialog.Title>
+                  {error && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="mb-4 p-2 bg-red-100 text-red-700 rounded"
+                    >
+                      {error}
+                    </motion.div>
+                  )}
                   <div className="mt-2 space-y-4">
                     <div>
                       <input
@@ -623,4 +669,3 @@ export default function ScheduleTable({ schedules, onChange }: { schedules: Sche
     </div>
   );
 }
-  
