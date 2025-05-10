@@ -630,71 +630,68 @@ export default function ScheduleTable({
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="block text-sm font-medium text-gray-700">Start Time</label>
-                      <Combobox value={startTime} onChange={(value) => {
-                        setStartTime(value);
-                        setEndTime(null);
-                        setEndTimeQuery('');
-                      }}>
-                        <div className="relative">
-                          <Combobox.Input
-                            className="w-full p-2 border rounded"
-                            onChange={(event) => setStartTimeQuery(event.target.value)}
-                            displayValue={(time: string) => time || ''}
-                            placeholder="Select start time"
-                          />
-                          <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
-                            <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-                          </Combobox.Button>
-                          <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                            {filteredStartTimes.map((time) => (
-                              <Combobox.Option
-                                key={time}
-                                value={time}
-                                className={({ active }) =>
-                                  `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                                    active ? 'bg-blue-600 text-white' : 'text-gray-900'
-                                  }`
-                                }
-                              >
-                                {time}
-                              </Combobox.Option>
-                            ))}
-                          </Combobox.Options>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Time</label>
+                      <div className="flex flex-row gap-2">
+                        <div className="flex-1">
+                          <Combobox value={startTime} onChange={(value) => {
+                            setStartTime(value);
+                            setEndTime(null);
+                            setEndTimeQuery('');
+                          }}>
+                            <div className="relative">
+                              <Combobox.Button className="w-full p-2 border rounded flex justify-between items-center bg-white">
+                                <span className={(startTime ? '' : 'text-gray-400 text-xs') + ' truncate'}>
+                                  {startTime || 'Select start time'}
+                                </span>
+                                <ChevronUpDownIcon className="h-5 w-5 text-gray-400 ml-2" aria-hidden="true" />
+                              </Combobox.Button>
+                              <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                                {filteredStartTimes.map((time) => (
+                                  <Combobox.Option
+                                    key={time}
+                                    value={time}
+                                    className={({ active }) =>
+                                      `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                                        active ? 'bg-blue-600 text-white' : 'text-gray-900'
+                                      }`
+                                    }
+                                  >
+                                    {time}
+                                  </Combobox.Option>
+                                ))}
+                              </Combobox.Options>
+                            </div>
+                          </Combobox>
                         </div>
-                      </Combobox>
-                    </div>
-                    <div className="space-y-2">
-                      <label className="block text-sm font-medium text-gray-700">End Time</label>
-                      <Combobox value={endTime} onChange={setEndTime} disabled={!startTime}>
-                        <div className="relative">
-                          <Combobox.Input
-                            className={`w-full p-2 border rounded ${!startTime ? 'bg-gray-100 cursor-not-allowed' : ''}`}
-                            onChange={(event) => setEndTimeQuery(event.target.value)}
-                            displayValue={(time: string) => time || ''}
-                            placeholder={startTime ? "Select end time" : "Select start time first"}
-                            disabled={!startTime}
-                          />
-                          <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
-                            <ChevronUpDownIcon className={`h-5 w-5 ${!startTime ? 'text-gray-300' : 'text-gray-400'}`} aria-hidden="true" />
-                          </Combobox.Button>
-                          <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                            {filteredEndTimes.map((time) => (
-                              <Combobox.Option
-                                key={time}
-                                value={time}
-                                className={({ active }) =>
-                                  `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                                    active ? 'bg-blue-600 text-white' : 'text-gray-900'
-                                  }`
-                                }
-                              >
-                                {time}
-                              </Combobox.Option>
-                            ))}
-                          </Combobox.Options>
+                        <span className="self-center text-gray-400">-</span>
+                        <div className="flex-1">
+                          <Combobox value={endTime} onChange={setEndTime} disabled={!startTime}>
+                            <div className="relative">
+                              <Combobox.Button className={`w-full p-2 border rounded flex justify-between items-center ${!startTime ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}`} disabled={!startTime}>
+                                <span className={(!startTime ? 'text-gray-400 text-xs' : endTime ? '' : 'text-gray-400 text-xs') + ' truncate'}>
+                                  {startTime ? (endTime || 'Select end time') : 'Select start time first'}
+                                </span>
+                                <ChevronUpDownIcon className={`h-5 w-5 ml-2 ${!startTime ? 'text-gray-300' : 'text-gray-400'}`} aria-hidden="true" />
+                              </Combobox.Button>
+                              <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                                {filteredEndTimes.map((time) => (
+                                  <Combobox.Option
+                                    key={time}
+                                    value={time}
+                                    className={({ active }) =>
+                                      `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                                        active ? 'bg-blue-600 text-white' : 'text-gray-900'
+                                      }`
+                                    }
+                                  >
+                                    {time}
+                                  </Combobox.Option>
+                                ))}
+                              </Combobox.Options>
+                            </div>
+                          </Combobox>
                         </div>
-                      </Combobox>
+                      </div>
                     </div>
                     <div>
                       <input
