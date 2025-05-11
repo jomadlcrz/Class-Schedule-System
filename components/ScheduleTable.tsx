@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { PencilSquareIcon, TrashIcon, ChevronUpDownIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Dialog, Transition, Combobox } from '@headlessui/react';
 import { Fragment } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import 'react-time-picker/dist/TimePicker.css';
 import 'react-clock/dist/Clock.css';
+import debounce from 'lodash/debounce';
 
 type Schedule = {
   _id: string;
@@ -66,6 +67,7 @@ export default function ScheduleTable({
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<{ courseCode?: string; descriptiveTitle?: string }>({});
 
   const timeOptions = generateTimeOptions();
 
@@ -323,6 +325,52 @@ export default function ScheduleTable({
     setStartTime(null);
     setEndTime(null);
   }
+
+  const checkDuplicate = useCallback(
+    debounce(async (field: 'courseCode' | 'descriptiveTitle', value: string) => {
+      if (!value.trim() || !editingId) return;
+
+      try {
+        const checkRes = await fetch('/api/schedule/check-duplicates', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            [field]: value,
+            excludeId: editingId
+          }),
+        });
+
+        const { isDuplicate, field: duplicateField } = await checkRes.json();
+        
+        if (isDuplicate) {
+          setValidationErrors(prev => ({
+            ...prev,
+            [field]: `${duplicateField} already exists. Please use a different ${duplicateField.toLowerCase()}.`
+          }));
+        } else {
+          setValidationErrors(prev => ({
+            ...prev,
+            [field]: undefined
+          }));
+        }
+      } catch (err) {
+        console.error('Error checking duplicates:', err);
+      }
+    }, 500),
+    [editingId]
+  );
+
+  useEffect(() => {
+    if (editForm?.courseCode) {
+      checkDuplicate('courseCode', editForm.courseCode);
+    }
+  }, [editForm?.courseCode, checkDuplicate]);
+
+  useEffect(() => {
+    if (editForm?.descriptiveTitle) {
+      checkDuplicate('descriptiveTitle', editForm.descriptiveTitle);
+    }
+  }, [editForm?.descriptiveTitle, checkDuplicate]);
 
   function handleEditChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (!editForm) return;
@@ -597,8 +645,17 @@ export default function ScheduleTable({
                         value={editForm?.courseCode || ''}
                         onChange={handleEditChange}
                         placeholder="Course Code"
-                        className="w-full p-2 border rounded"
+                        className={`w-full p-2 border rounded ${validationErrors.courseCode ? 'border-red-500' : ''}`}
                       />
+                      {validationErrors.courseCode && (
+                        <motion.p 
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="text-red-500 text-sm mt-1"
+                        >
+                          {validationErrors.courseCode}
+                        </motion.p>
+                      )}
                     </div>
                     <div>
                       <input
@@ -606,8 +663,17 @@ export default function ScheduleTable({
                         value={editForm?.descriptiveTitle || ''}
                         onChange={handleEditChange}
                         placeholder="Descriptive Title"
-                        className="w-full p-2 border rounded"
+                        className={`w-full p-2 border rounded ${validationErrors.descriptiveTitle ? 'border-red-500' : ''}`}
                       />
+                      {validationErrors.descriptiveTitle && (
+                        <motion.p 
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="text-red-500 text-sm mt-1"
+                        >
+                          {validationErrors.descriptiveTitle}
+                        </motion.p>
+                      )}
                     </div>
                     <div>
                       <input

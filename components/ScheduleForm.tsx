@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Dialog, Transition, Combobox } from '@headlessui/react';
 import { Fragment } from 'react';
 import { PlusIcon, ChevronUpDownIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
 import 'react-time-picker/dist/TimePicker.css';
 import 'react-clock/dist/Clock.css';
+import debounce from 'lodash/debounce';
 
 type ScheduleFormData = {
   courseCode: string;
@@ -57,6 +58,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
   const [error, setError] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<{ courseCode?: string; descriptiveTitle?: string }>({});
 
   const timeOptions = generateTimeOptions();
 
@@ -97,6 +99,51 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
     return !isNaN(Number(units)) && Number(units) > 0;
   }
 
+  const checkDuplicate = useCallback(
+    debounce(async (field: 'courseCode' | 'descriptiveTitle', value: string) => {
+      if (!value.trim()) return;
+
+      try {
+        const checkRes = await fetch('/api/schedule/check-duplicates', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            [field]: value
+          }),
+        });
+
+        const { isDuplicate, field: duplicateField } = await checkRes.json();
+        
+        if (isDuplicate) {
+          setValidationErrors(prev => ({
+            ...prev,
+            [field]: `${duplicateField} already exists. Please use a different ${duplicateField.toLowerCase()}.`
+          }));
+        } else {
+          setValidationErrors(prev => ({
+            ...prev,
+            [field]: undefined
+          }));
+        }
+      } catch (err) {
+        console.error('Error checking duplicates:', err);
+      }
+    }, 500),
+    []
+  );
+
+  useEffect(() => {
+    if (formData.courseCode) {
+      checkDuplicate('courseCode', formData.courseCode);
+    }
+  }, [formData.courseCode, checkDuplicate]);
+
+  useEffect(() => {
+    if (formData.descriptiveTitle) {
+      checkDuplicate('descriptiveTitle', formData.descriptiveTitle);
+    }
+  }, [formData.descriptiveTitle, checkDuplicate]);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError('');
@@ -116,23 +163,6 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
 
     // Check for duplicates
     try {
-      const checkRes = await fetch('/api/schedule/check-duplicates', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          courseCode: formData.courseCode,
-          descriptiveTitle: formData.descriptiveTitle
-        }),
-      });
-
-      const { isDuplicate, field } = await checkRes.json();
-      
-      if (isDuplicate) {
-        setError(`${field} already exists. Please use a different ${field.toLowerCase()}.`);
-        setIsSubmitting(false);
-        return;
-      }
-
       const timeString = `${startTime}-${endTime}`;
 
       const res = await fetch('/api/schedule', {
@@ -222,8 +252,17 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           onChange={handleChange}
           placeholder="Course Code"
           required
-          className="w-full p-2 border rounded"
+          className={`w-full p-2 border rounded ${validationErrors.courseCode ? 'border-red-500' : ''}`}
         />
+        {validationErrors.courseCode && (
+          <motion.p 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-red-500 text-sm mt-1"
+          >
+            {validationErrors.courseCode}
+          </motion.p>
+        )}
       </motion.div>
       <motion.div
         initial={{ opacity: 0, x: -20 }}
@@ -237,8 +276,17 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           onChange={handleChange}
           placeholder="Descriptive Title"
           required
-          className="w-full p-2 border rounded"
+          className={`w-full p-2 border rounded ${validationErrors.descriptiveTitle ? 'border-red-500' : ''}`}
         />
+        {validationErrors.descriptiveTitle && (
+          <motion.p 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-red-500 text-sm mt-1"
+          >
+            {validationErrors.descriptiveTitle}
+          </motion.p>
+        )}
       </motion.div>
       <motion.div
         initial={{ opacity: 0, x: -20 }}
@@ -425,8 +473,17 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           onChange={handleChange}
           placeholder="Course Code"
           required
-          className="w-full p-2 border rounded"
+          className={`w-full p-2 border rounded ${validationErrors.courseCode ? 'border-red-500' : ''}`}
         />
+        {validationErrors.courseCode && (
+          <motion.p 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-red-500 text-sm mt-1"
+          >
+            {validationErrors.courseCode}
+          </motion.p>
+        )}
       </motion.div>
       <motion.div
         initial={{ opacity: 0 }}
@@ -440,8 +497,17 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           onChange={handleChange}
           placeholder="Descriptive Title"
           required
-          className="w-full p-2 border rounded"
+          className={`w-full p-2 border rounded ${validationErrors.descriptiveTitle ? 'border-red-500' : ''}`}
         />
+        {validationErrors.descriptiveTitle && (
+          <motion.p 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-red-500 text-sm mt-1"
+          >
+            {validationErrors.descriptiveTitle}
+          </motion.p>
+        )}
       </motion.div>
       <motion.div
         initial={{ opacity: 0 }}
