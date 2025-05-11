@@ -590,147 +590,159 @@ export default function ScheduleTable({
                       {error}
                     </motion.div>
                   )}
-                  <div className="mt-2 space-y-4">
-                    <div>
-                      <input
-                        name="courseCode"
-                        value={editForm?.courseCode || ''}
-                        onChange={handleEditChange}
-                        placeholder="Course Code"
-                        className="w-full p-2 border rounded"
-                      />
-                    </div>
-                    <div>
-                      <input
-                        name="descriptiveTitle"
-                        value={editForm?.descriptiveTitle || ''}
-                        onChange={handleEditChange}
-                        placeholder="Descriptive Title"
-                        className="w-full p-2 border rounded"
-                      />
-                    </div>
-                    <div>
-                      <input
-                        name="units"
-                        value={editForm?.units || ''}
-                        onChange={handleEditChange}
-                        placeholder="Units"
-                        type="number"
-                        min="1"
-                        className="w-full p-2 border rounded"
-                      />
-                    </div>
-                    <div>
-                      <input
-                        name="days"
-                        value={editForm?.days || ''}
-                        onChange={handleEditChange}
-                        placeholder="Days"
-                        className="w-full p-2 border rounded"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Time</label>
-                      <div className="flex flex-row items-center gap-2 min-w-0">
-                        <div className="flex-1 min-w-0">
-                          <Combobox value={startTime} onChange={(value) => {
-                            setStartTime(value);
-                            setEndTime(null);
-                            setEndTimeQuery('');
-                          }}>
-                            <div className="relative">
-                              <Combobox.Button className="w-full p-2 border rounded flex justify-between items-center bg-white h-[42px]">
-                                <span className={(startTime ? '' : 'text-gray-400 text-xs') + ' truncate'}>
-                                  {startTime || 'Select start time'}
-                                </span>
-                                <ChevronUpDownIcon className="h-5 w-5 text-gray-400 ml-2 flex-shrink-0" aria-hidden="true" />
-                              </Combobox.Button>
-                              <Combobox.Options className="absolute z-10 bottom-full mb-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                                {filteredStartTimes.map((time) => (
-                                  <Combobox.Option
-                                    key={time}
-                                    value={time}
-                                    className={({ active }) =>
-                                      `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                                        active ? 'bg-blue-600 text-white' : 'text-gray-900'
-                                      }`
-                                    }
-                                  >
-                                    {time}
-                                  </Combobox.Option>
-                                ))}
-                              </Combobox.Options>
-                            </div>
-                          </Combobox>
-                        </div>
-                        <span className="text-gray-400 flex-shrink-0">-</span>
-                        <div className="flex-1 min-w-0">
-                          <Combobox value={endTime} onChange={setEndTime} disabled={!startTime}>
-                            <div className="relative">
-                              <Combobox.Button className={`w-full p-2 border rounded flex justify-between items-center ${!startTime ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'} h-[42px]`} disabled={!startTime}>
-                                <span className={(!startTime ? 'text-gray-400 text-xs' : endTime ? '' : 'text-gray-400 text-xs') + ' truncate'}>
-                                  {startTime ? (endTime || 'Select end time') : 'Select start time first'}
-                                </span>
-                                <ChevronUpDownIcon className={`h-5 w-5 ml-2 flex-shrink-0 ${!startTime ? 'text-gray-300' : 'text-gray-400'}`} aria-hidden="true" />
-                              </Combobox.Button>
-                              <Combobox.Options className="absolute z-10 bottom-full mb-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                                {filteredEndTimes.map((time) => (
-                                  <Combobox.Option
-                                    key={time}
-                                    value={time}
-                                    className={({ active }) =>
-                                      `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                                        active ? 'bg-blue-600 text-white' : 'text-gray-900'
-                                      }`
-                                    }
-                                  >
-                                    {time}
-                                  </Combobox.Option>
-                                ))}
-                              </Combobox.Options>
-                            </div>
-                          </Combobox>
+                  <form
+                    onSubmit={e => {
+                      e.preventDefault();
+                      handleSaveEdit();
+                    }}
+                  >
+                    <div className="mt-2 space-y-4">
+                      <div>
+                        <input
+                          name="courseCode"
+                          value={editForm?.courseCode || ''}
+                          onChange={handleEditChange}
+                          placeholder="Course Code"
+                          className="w-full p-2 border rounded"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <input
+                          name="descriptiveTitle"
+                          value={editForm?.descriptiveTitle || ''}
+                          onChange={handleEditChange}
+                          placeholder="Descriptive Title"
+                          className="w-full p-2 border rounded"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <input
+                          name="units"
+                          value={editForm?.units || ''}
+                          onChange={handleEditChange}
+                          placeholder="Units"
+                          type="number"
+                          min="1"
+                          className="w-full p-2 border rounded"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <input
+                          name="days"
+                          value={editForm?.days || ''}
+                          onChange={handleEditChange}
+                          placeholder="Days"
+                          className="w-full p-2 border rounded"
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Time</label>
+                        <div className="flex flex-row items-center gap-2 min-w-0">
+                          <div className="flex-1 min-w-0">
+                            <Combobox value={startTime} onChange={(value) => {
+                              setStartTime(value);
+                              setEndTime(null);
+                              setEndTimeQuery('');
+                            }}>
+                              <div className="relative">
+                                <Combobox.Button className="w-full p-2 border rounded flex justify-between items-center bg-white h-[42px]">
+                                  <span className={(startTime ? '' : 'text-gray-400 text-xs') + ' truncate'}>
+                                    {startTime || 'Select start time'}
+                                  </span>
+                                  <ChevronUpDownIcon className="h-5 w-5 text-gray-400 ml-2 flex-shrink-0" aria-hidden="true" />
+                                </Combobox.Button>
+                                <Combobox.Options className="absolute z-10 bottom-full mb-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                                  {filteredStartTimes.map((time) => (
+                                    <Combobox.Option
+                                      key={time}
+                                      value={time}
+                                      className={({ active }) =>
+                                        `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                                          active ? 'bg-blue-600 text-white' : 'text-gray-900'
+                                        }`
+                                      }
+                                    >
+                                      {time}
+                                    </Combobox.Option>
+                                  ))}
+                                </Combobox.Options>
+                              </div>
+                            </Combobox>
+                          </div>
+                          <span className="text-gray-400 flex-shrink-0">-</span>
+                          <div className="flex-1 min-w-0">
+                            <Combobox value={endTime} onChange={setEndTime} disabled={!startTime}>
+                              <div className="relative">
+                                <Combobox.Button className={`w-full p-2 border rounded flex justify-between items-center ${!startTime ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'} h-[42px]`} disabled={!startTime}>
+                                  <span className={(!startTime ? 'text-gray-400 text-xs' : endTime ? '' : 'text-gray-400 text-xs') + ' truncate'}>
+                                    {startTime ? (endTime || 'Select end time') : 'Select start time first'}
+                                  </span>
+                                  <ChevronUpDownIcon className={`h-5 w-5 ml-2 flex-shrink-0 ${!startTime ? 'text-gray-300' : 'text-gray-400'}`} aria-hidden="true" />
+                                </Combobox.Button>
+                                <Combobox.Options className="absolute z-10 bottom-full mb-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                                  {filteredEndTimes.map((time) => (
+                                    <Combobox.Option
+                                      key={time}
+                                      value={time}
+                                      className={({ active }) =>
+                                        `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                                          active ? 'bg-blue-600 text-white' : 'text-gray-900'
+                                        }`
+                                      }
+                                    >
+                                      {time}
+                                    </Combobox.Option>
+                                  ))}
+                                </Combobox.Options>
+                              </div>
+                            </Combobox>
+                          </div>
                         </div>
                       </div>
+                      <div>
+                        <input
+                          name="room"
+                          value={editForm?.room || ''}
+                          onChange={handleEditChange}
+                          placeholder="Room"
+                          className="w-full p-2 border rounded"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <input
+                          name="instructor"
+                          value={editForm?.instructor || ''}
+                          onChange={handleEditChange}
+                          placeholder="Instructor"
+                          className="w-full p-2 border rounded"
+                          required
+                        />
+                      </div>
                     </div>
-                    <div>
-                      <input
-                        name="room"
-                        value={editForm?.room || ''}
-                        onChange={handleEditChange}
-                        placeholder="Room"
-                        className="w-full p-2 border rounded"
-                      />
-                    </div>
-                    <div>
-                      <input
-                        name="instructor"
-                        value={editForm?.instructor || ''}
-                        onChange={handleEditChange}
-                        placeholder="Instructor"
-                        className="w-full p-2 border rounded"
-                      />
-                    </div>
-                  </div>
 
-                  <div className="mt-6 flex justify-end">
-                    <button
-                      type="button"
-                      disabled={isSaving}
-                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed items-center gap-2"
-                      onClick={handleSaveEdit}
-                    >
-                      {isSaving ? (
-                        <>
-                          Please wait...
-                          <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                          </svg>
-                        </>
-                      ) : 'Save Changes'}
-                    </button>
-                  </div>
+                    <div className="mt-6 flex justify-end">
+                      <button
+                        type="submit"
+                        disabled={isSaving}
+                        className="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed items-center gap-2"
+                      >
+                        {isSaving ? (
+                          <>
+                            Please wait...
+                            <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                          </>
+                        ) : 'Save Changes'}
+                      </button>
+                    </div>
+                  </form>
                 </Dialog.Panel>
               </Transition.Child>
             </div>
