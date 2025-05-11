@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { PencilSquareIcon, TrashIcon, ChevronUpDownIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Dialog, Transition, Combobox } from '@headlessui/react';
 import { Fragment } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import 'react-time-picker/dist/TimePicker.css';
 import 'react-clock/dist/Clock.css';
+import debounce from 'lodash/debounce';
 
 type Schedule = {
   _id: string;
@@ -56,6 +57,10 @@ export default function ScheduleTable({
   onSort: (field: SortField) => void
 }) {
   const [error, setError] = useState('');
+  const [validationErrors, setValidationErrors] = useState<{
+    courseCode?: string;
+    descriptiveTitle?: string;
+  }>({});
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<Schedule | null>(null);
   const [startTime, setStartTime] = useState<string | null>(null);
@@ -243,7 +248,10 @@ export default function ScheduleTable({
       const { isDuplicate, field } = await checkRes.json();
       
       if (isDuplicate) {
-        setError(`${field} already exists. Please use a different ${field.toLowerCase()}.`);
+        setValidationErrors(prev => ({
+          ...prev,
+          [field.toLowerCase()]: `${field} already exists. Please use a different ${field.toLowerCase()}.`
+        }));
         setIsSaving(false);
         return;
       }
@@ -324,6 +332,45 @@ export default function ScheduleTable({
     setEndTime(null);
   }
 
+  // Debounced validation function
+  const validateField = debounce(async (field: 'courseCode' | 'descriptiveTitle', value: string) => {
+    if (!value || !editingId) return;
+
+    try {
+      const checkRes = await fetch('/api/schedule/check-duplicates', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          [field]: value,
+          excludeId: editingId // Exclude current schedule from duplicate check
+        }),
+      });
+
+      const { isDuplicate, field: duplicateField } = await checkRes.json();
+      
+      if (isDuplicate) {
+        setValidationErrors(prev => ({
+          ...prev,
+          [field]: `${duplicateField} already exists. Please use a different ${duplicateField.toLowerCase()}.`
+        }));
+      } else {
+        setValidationErrors(prev => ({
+          ...prev,
+          [field]: undefined
+        }));
+      }
+    } catch (err) {
+      console.error('Error checking duplicates:', err);
+    }
+  }, 500);
+
+  // Clear validation errors when modal closes
+  useEffect(() => {
+    if (!isEditModalOpen) {
+      setValidationErrors({});
+    }
+  }, [isEditModalOpen]);
+
   function handleEditChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (!editForm) return;
     const { name, value } = e.target;
@@ -339,6 +386,20 @@ export default function ScheduleTable({
     }
     
     setEditForm(prev => prev ? { ...prev, [name]: value } : null);
+
+    // Clear validation error if input is empty
+    if ((name === 'courseCode' || name === 'descriptiveTitle') && !value) {
+      setValidationErrors(prev => ({
+        ...prev,
+        [name]: undefined
+      }));
+      return;
+    }
+
+    // Validate course code and descriptive title in real-time
+    if (name === 'courseCode' || name === 'descriptiveTitle') {
+      validateField(name, value);
+    }
   }
 
   function openDeleteModal(id: string) {
@@ -603,9 +664,12 @@ export default function ScheduleTable({
                           value={editForm?.courseCode || ''}
                           onChange={handleEditChange}
                           placeholder="Course Code"
-                          className="w-full p-2 border rounded"
+                          className={`w-full p-2 border rounded ${validationErrors.courseCode ? 'border-red-500' : ''}`}
                           required
                         />
+                        {validationErrors.courseCode && (
+                          <p className="mt-1 text-sm text-red-600">{validationErrors.courseCode}</p>
+                        )}
                       </div>
                       <div>
                         <input
@@ -613,9 +677,12 @@ export default function ScheduleTable({
                           value={editForm?.descriptiveTitle || ''}
                           onChange={handleEditChange}
                           placeholder="Descriptive Title"
-                          className="w-full p-2 border rounded"
+                          className={`w-full p-2 border rounded ${validationErrors.descriptiveTitle ? 'border-red-500' : ''}`}
                           required
                         />
+                        {validationErrors.descriptiveTitle && (
+                          <p className="mt-1 text-sm text-red-600">{validationErrors.descriptiveTitle}</p>
+                        )}
                       </div>
                       <div>
                         <input
