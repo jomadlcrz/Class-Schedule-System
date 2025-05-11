@@ -328,7 +328,23 @@ export default function ScheduleTable({
 
   const checkDuplicate = useCallback(
     debounce(async (field: 'courseCode' | 'descriptiveTitle', value: string) => {
-      if (!value.trim() || !editingId) return;
+      if (!value.trim() || !editingId) {
+        setValidationErrors(prev => ({
+          ...prev,
+          [field]: undefined
+        }));
+        return;
+      }
+
+      // Check if the value matches the original schedule
+      const originalSchedule = schedules.find(s => s._id === editingId);
+      if (originalSchedule && value === originalSchedule[field]) {
+        setValidationErrors(prev => ({
+          ...prev,
+          [field]: undefined
+        }));
+        return;
+      }
 
       try {
         const checkRes = await fetch('/api/schedule/check-duplicates', {
@@ -357,7 +373,7 @@ export default function ScheduleTable({
         console.error('Error checking duplicates:', err);
       }
     }, 500),
-    [editingId]
+    [editingId, schedules]
   );
 
   useEffect(() => {
@@ -387,6 +403,19 @@ export default function ScheduleTable({
     }
     
     setEditForm(prev => prev ? { ...prev, [name]: value } : null);
+
+    // Clear validation errors if:
+    // 1. The field is empty
+    // 2. The value matches the original schedule
+    const originalSchedule = schedules.find(s => s._id === editingId);
+    if (!originalSchedule) return;
+
+    if (!value.trim() || value === originalSchedule[name as keyof Schedule]) {
+      setValidationErrors(prev => ({
+        ...prev,
+        [name]: undefined
+      }));
+    }
   }
 
   function openDeleteModal(id: string) {

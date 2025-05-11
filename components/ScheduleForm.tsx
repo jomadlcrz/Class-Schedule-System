@@ -101,7 +101,13 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
 
   const checkDuplicate = useCallback(
     debounce(async (field: 'courseCode' | 'descriptiveTitle', value: string) => {
-      if (!value.trim()) return;
+      if (!value.trim()) {
+        setValidationErrors(prev => ({
+          ...prev,
+          [field]: undefined
+        }));
+        return;
+      }
 
       try {
         const checkRes = await fetch('/api/schedule/check-duplicates', {
@@ -220,6 +226,14 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
       ...prev,
       [name]: value
     }));
+
+    // Clear validation errors if the field is empty
+    if (!value.trim()) {
+      setValidationErrors(prev => ({
+        ...prev,
+        [name]: undefined
+      }));
+    }
   }
 
   const desktopFormContent = (
