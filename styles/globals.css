@@ -12,6 +12,7 @@ html {
   overflow-x: hidden;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */
+  background-color: white;
 }
 
 html::-webkit-scrollbar {
@@ -27,6 +28,23 @@ body {
   )
   rgb(var(--background-start-rgb));
   overflow-x: hidden;
+  min-height: 100vh;
+  background-color: white;
+}
+
+/* Prevent content shift during load */
+* {
+  box-sizing: border-box;
+}
+
+/* Smooth transitions */
+.js-loading {
+  opacity: 0;
+  transition: opacity 0.3s ease-in;
+}
+
+.js-loaded {
+  opacity: 1;
 }
 
 ::-webkit-selection {
