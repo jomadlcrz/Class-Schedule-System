@@ -8,20 +8,7 @@ import { EnvelopeIcon, ArrowRightOnRectangleIcon, ChevronUpDownIcon } from '@her
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
-
-type Schedule = {
-  _id: string;
-  courseCode: string;
-  descriptiveTitle: string;
-  units: string;
-  days: string;
-  time: string;
-  room: string;
-  instructor: string;
-};
-
-type SortField = 'courseCode' | 'descriptiveTitle' | 'units' | 'days' | 'time' | 'room' | 'instructor';
-type SortDirection = 'asc' | 'desc';
+import { Schedule, SortField, SortDirection } from '../types';
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -43,11 +30,7 @@ export default function Home() {
   });
   const router = useRouter();
 
-  useEffect(() => {
-    // Remove loading class when component mounts
-    document.documentElement.classList.remove('js-loading');
-    document.documentElement.classList.add('js-loaded');
-  }, []);
+
 
   useEffect(() => {
     if (status === 'authenticated') {
