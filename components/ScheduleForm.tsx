@@ -443,7 +443,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
                     <button
                       type="submit"
                       disabled={isSubmitting || Object.keys(validationErrors).some(key => validationErrors[key as keyof typeof validationErrors])}
-                      className="w-full bg-blue-600 text-white px-4 py-2 rounded transition-colors cursor-pointer disabled:opacity-50 disabled:bg-blue-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      className="w-full inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed items-center gap-2"
                     >
                       {isSubmitting ? (
                         <>
