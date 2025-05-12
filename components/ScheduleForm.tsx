@@ -441,8 +441,8 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
       
       <motion.button
         type="submit"
-        disabled={isSubmitting}
-        className="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        disabled={isSubmitting || Object.keys(validationErrors).some(key => validationErrors[key as keyof typeof validationErrors])}
+        className="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors cursor-pointer disabled:opacity-50 disabled:bg-blue-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -651,8 +651,8 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
       <div className="flex gap-3">
         <motion.button
           type="submit"
-          disabled={isSubmitting}
-          className="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          disabled={isSubmitting || Object.keys(validationErrors).some(key => validationErrors[key as keyof typeof validationErrors])}
+          className="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors cursor-pointer disabled:opacity-50 disabled:bg-blue-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

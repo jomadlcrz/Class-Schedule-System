@@ -795,7 +795,7 @@ export default function ScheduleTable({
                     <div className="mt-6 flex justify-end">
                       <button
                         type="submit"
-                        disabled={isSaving}
+                        disabled={isSaving || Object.keys(validationErrors).some(key => validationErrors[key as keyof typeof validationErrors])}
                         className="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed items-center gap-2"
                       >
                         {isSaving ? (
