@@ -36,6 +36,12 @@ body {
   box-sizing: border-box;
 }
 
+/* Remove all focus outlines */
+*:focus,
+*:focus-visible {
+  outline: none !important;
+}
+
 ::-webkit-selection {
   background-color: #CCFBF1;
   color: #0F766E;
