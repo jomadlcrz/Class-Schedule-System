@@ -253,29 +253,16 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
   }
 
   const desktopFormContent = (
-    <motion.form 
+    <form 
       onSubmit={handleSubmit} 
       className="space-y-4"
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.5 }}
     >
       {error && (
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="p-2 bg-red-100 text-red-700 rounded"
-        >
+        <div className="p-2 bg-red-100 text-red-700 rounded">
           {error}
-        </motion.div>
+        </div>
       )}
-      <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.3, delay: 0.1 }}
-      >
+      <div>
         <input
           name="courseCode"
           value={formData.courseCode}
@@ -287,13 +274,8 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
         {validationErrors.courseCode && (
           <p className="mt-1 text-sm text-red-600">{validationErrors.courseCode}</p>
         )}
-      </motion.div>
-      <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.3, delay: 0.2 }}
-      >
+      </div>
+      <div>
         <input
           name="descriptiveTitle"
           value={formData.descriptiveTitle}
@@ -305,13 +287,8 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
         {validationErrors.descriptiveTitle && (
           <p className="mt-1 text-sm text-red-600">{validationErrors.descriptiveTitle}</p>
         )}
-      </motion.div>
-      <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.3, delay: 0.3 }}
-      >
+      </div>
+      <div>
         <input
           name="units"
           value={formData.units}
@@ -322,13 +299,8 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           min="1"
           className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
-      </motion.div>
-      <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.3, delay: 0.4 }}
-      >
+      </div>
+      <div>
         <input
           name="days"
           value={formData.days}
@@ -337,14 +309,8 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           required
           className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
-      </motion.div>
-      <motion.div 
-        className="space-y-2"
-        initial={{ opacity: 0, x: -20 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.3, delay: 0.5 }}
-      >
+      </div>
+      <div className="space-y-2">
         <label className="block text-sm font-medium text-gray-700 mb-1">Time</label>
         <div className="flex flex-row items-center gap-2 min-w-0">
           <div className="flex-1 min-w-0">
@@ -407,13 +373,8 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
             </Combobox>
           </div>
         </div>
-      </motion.div>
-      <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.3, delay: 0.7 }}
-      >
+      </div>
+      <div>
         <input
           name="room"
           value={formData.room}
@@ -422,13 +383,8 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           required
           className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
-      </motion.div>
-      <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.3, delay: 0.8 }}
-      >
+      </div>
+      <div>
         <input
           name="instructor"
           value={formData.instructor}
@@ -437,16 +393,12 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           required
           className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
-      </motion.div>
+      </div>
       
-      <motion.button
+      <button
         type="submit"
         disabled={isSubmitting || Object.keys(validationErrors).some(key => validationErrors[key as keyof typeof validationErrors])}
         className="w-full bg-blue-600 text-white px-4 py-2 rounded transition-colors cursor-pointer disabled:opacity-50 disabled:bg-blue-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.3, delay: 1 }}
       >
         {isSubmitting ? (
           <>
@@ -457,34 +409,21 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
             </svg>
           </>
         ) : 'Add Schedule'}
-      </motion.button>
-    </motion.form>
+      </button>
+    </form>
   );
 
   const mobileFormContent = (
-    <motion.form 
+    <form 
       onSubmit={handleSubmit} 
       className="space-y-4"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
     >
       {error && (
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.2 }}
-          className="p-2 bg-red-100 text-red-700 rounded"
-        >
+        <div className="p-2 bg-red-100 text-red-700 rounded">
           {error}
-        </motion.div>
+        </div>
       )}
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.2 }}
-      >
+      <div>
         <input
           name="courseCode"
           value={formData.courseCode}
@@ -496,13 +435,8 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
         {validationErrors.courseCode && (
           <p className="mt-1 text-sm text-red-600">{validationErrors.courseCode}</p>
         )}
-      </motion.div>
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.2 }}
-      >
+      </div>
+      <div>
         <input
           name="descriptiveTitle"
           value={formData.descriptiveTitle}
@@ -514,13 +448,8 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
         {validationErrors.descriptiveTitle && (
           <p className="mt-1 text-sm text-red-600">{validationErrors.descriptiveTitle}</p>
         )}
-      </motion.div>
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.2 }}
-      >
+      </div>
+      <div>
         <input
           name="units"
           value={formData.units}
@@ -531,13 +460,8 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           min="1"
           className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
-      </motion.div>
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.2 }}
-      >
+      </div>
+      <div>
         <input
           name="days"
           value={formData.days}
@@ -546,14 +470,8 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           required
           className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
-      </motion.div>
-      <motion.div 
-        className="space-y-2"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.2 }}
-      >
+      </div>
+      <div className="space-y-2">
         <label className="block text-sm font-medium text-gray-700 mb-1">Time</label>
         <div className="flex flex-row items-center gap-2 min-w-0">
           <div className="flex-1 min-w-0">
@@ -616,13 +534,8 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
             </Combobox>
           </div>
         </div>
-      </motion.div>
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.2 }}
-      >
+      </div>
+      <div>
         <input
           name="room"
           value={formData.room}
@@ -631,13 +544,8 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           required
           className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
-      </motion.div>
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.2 }}
-      >
+      </div>
+      <div>
         <input
           name="instructor"
           value={formData.instructor}
@@ -646,17 +554,13 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           required
           className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
-      </motion.div>
+      </div>
       
       <div className="flex gap-3">
-        <motion.button
+        <button
           type="submit"
           disabled={isSubmitting || Object.keys(validationErrors).some(key => validationErrors[key as keyof typeof validationErrors])}
           className="w-full bg-blue-600 text-white px-4 py-2 rounded transition-colors cursor-pointer disabled:opacity-50 disabled:bg-blue-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.3, delay: 1 }}
         >
           {isSubmitting ? (
             <>
@@ -667,9 +571,9 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
               </svg>
             </>
           ) : 'Add Schedule'}
-        </motion.button>
+        </button>
       </div>
-    </motion.form>
+    </form>
   );
 
   const hasFormValues = () => {
@@ -678,29 +582,20 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
 
   return (
     <>
-      {/* Mobile Add Button */}
-      <motion.div 
-        className="md:hidden p-4"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
+      {/* Add Button - Now visible on both mobile and desktop */}
+      <div 
+        className="p-0"
       >
         <button
           onClick={() => setIsModalOpen(true)}
-          className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded transition-colors cursor-pointer"
+          className="flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-md transition-colors cursor-pointer text-sm font-medium hover:bg-blue-700 mx-auto"
         >
           <PlusIcon className="h-5 w-5" />
           Add New Schedule
         </button>
-      </motion.div>
-
-      {/* Desktop Form */}
-      <div className="hidden md:block p-4">
-        {desktopFormContent}
       </div>
 
-      {/* Mobile Modal */}
+      {/* Modal - Now used for both mobile and desktop */}
       <Transition appear show={isModalOpen} as={Fragment}>
         <Dialog 
           as="div" 
@@ -747,7 +642,164 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
                   >
                     Add New Schedule
                   </Dialog.Title>
-                  {mobileFormContent}
+                  <form 
+                    onSubmit={handleSubmit} 
+                    className="space-y-4"
+                  >
+                    {error && (
+                      <div className="p-2 bg-red-100 text-red-700 rounded">
+                        {error}
+                      </div>
+                    )}
+                    <div>
+                      <input
+                        name="courseCode"
+                        value={formData.courseCode}
+                        onChange={handleChange}
+                        placeholder="Course Code"
+                        required
+                        className={`w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${validationErrors.courseCode ? 'border-red-500' : ''}`}
+                      />
+                      {validationErrors.courseCode && (
+                        <p className="mt-1 text-sm text-red-600">{validationErrors.courseCode}</p>
+                      )}
+                    </div>
+                    <div>
+                      <input
+                        name="descriptiveTitle"
+                        value={formData.descriptiveTitle}
+                        onChange={handleChange}
+                        placeholder="Descriptive Title"
+                        required
+                        className={`w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${validationErrors.descriptiveTitle ? 'border-red-500' : ''}`}
+                      />
+                      {validationErrors.descriptiveTitle && (
+                        <p className="mt-1 text-sm text-red-600">{validationErrors.descriptiveTitle}</p>
+                      )}
+                    </div>
+                    <div>
+                      <input
+                        name="units"
+                        value={formData.units}
+                        onChange={handleChange}
+                        placeholder="Units"
+                        required
+                        type="number"
+                        min="1"
+                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    </div>
+                    <div>
+                      <input
+                        name="days"
+                        value={formData.days}
+                        onChange={handleChange}
+                        placeholder="Days (e.g., MWF, TTH)"
+                        required
+                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Time</label>
+                      <div className="flex flex-row items-center gap-2 min-w-0">
+                        <div className="flex-1 min-w-0">
+                          <Combobox value={startTime} onChange={(value) => {
+                            setStartTime(value);
+                            setEndTime(null);
+                            setEndTimeQuery('');
+                          }}>
+                            <div className="relative">
+                              <Combobox.Button className="w-full p-2 border rounded flex justify-between items-center bg-white h-[42px]">
+                                <span className={(startTime ? '' : 'text-gray-400 text-xs') + ' truncate'}>
+                                  {startTime || 'Select start time'}
+                                </span>
+                                <ChevronUpDownIcon className="h-5 w-5 text-gray-400 ml-2 flex-shrink-0" aria-hidden="true" />
+                              </Combobox.Button>
+                              <Combobox.Options className="absolute z-10 bottom-full mb-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                                {filteredStartTimes.map((time) => (
+                                  <Combobox.Option
+                                    key={time}
+                                    value={time}
+                                    className={({ active }) =>
+                                      `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                                        active ? 'bg-blue-600 text-white' : 'text-gray-900'
+                                      }`
+                                    }
+                                  >
+                                    {time}
+                                  </Combobox.Option>
+                                ))}
+                              </Combobox.Options>
+                            </div>
+                          </Combobox>
+                        </div>
+                        <span className="text-gray-400 flex-shrink-0">-</span>
+                        <div className="flex-1 min-w-0">
+                          <Combobox value={endTime} onChange={setEndTime} disabled={!startTime}>
+                            <div className="relative">
+                              <Combobox.Button className={`w-full p-2 border rounded flex justify-between items-center ${!startTime ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'} h-[42px]`} disabled={!startTime}>
+                                <span className={(!startTime ? 'text-gray-400 text-xs' : endTime ? '' : 'text-gray-400 text-xs') + ' truncate'}>
+                                  {startTime ? (endTime || 'Select end time') : 'Select start time first'}
+                                </span>
+                                <ChevronUpDownIcon className={`h-5 w-5 ml-2 flex-shrink-0 ${!startTime ? 'text-gray-300' : 'text-gray-400'}`} aria-hidden="true" />
+                              </Combobox.Button>
+                              <Combobox.Options className="absolute z-10 bottom-full mb-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                                {filteredEndTimes.map((time) => (
+                                  <Combobox.Option
+                                    key={time}
+                                    value={time}
+                                    className={({ active }) =>
+                                      `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                                        active ? 'bg-blue-600 text-white' : 'text-gray-900'
+                                      }`
+                                    }
+                                  >
+                                    {time}
+                                  </Combobox.Option>
+                                ))}
+                              </Combobox.Options>
+                            </div>
+                          </Combobox>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <input
+                        name="room"
+                        value={formData.room}
+                        onChange={handleChange}
+                        placeholder="Room"
+                        required
+                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    </div>
+                    <div>
+                      <input
+                        name="instructor"
+                        value={formData.instructor}
+                        onChange={handleChange}
+                        placeholder="Instructor"
+                        required
+                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    </div>
+                    
+                    <button
+                      type="submit"
+                      disabled={isSubmitting || Object.keys(validationErrors).some(key => validationErrors[key as keyof typeof validationErrors])}
+                      className="w-full bg-blue-600 text-white px-4 py-2 rounded transition-colors cursor-pointer disabled:opacity-50 disabled:bg-blue-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          Please wait...
+                          <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                        </>
+                      ) : 'Add Schedule'}
+                    </button>
+                  </form>
                 </Dialog.Panel>
               </Transition.Child>
             </div>

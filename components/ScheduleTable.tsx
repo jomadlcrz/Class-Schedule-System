@@ -552,7 +552,7 @@ export default function ScheduleTable({
               >
                 Instructor <SortIcon field="instructor" />
               </th>
-              <th className="border p-2 text-left">Actions</th>
+              <th className="border p-2 text-center">Actions</th>
             </tr>
           </motion.thead>
           <tbody>
@@ -573,8 +573,8 @@ export default function ScheduleTable({
                   <td className="border p-2 text-center">{s.time}</td>
                   <td className="border p-2 text-center">{s.room}</td>
                   <td className="border p-2">{s.instructor}</td>
-                  <td className="border p-2">
-                    <div className="flex gap-1">
+                  <td className="border p-2 text-center">
+                    <div className="flex justify-center gap-1">
                       <button
                         onClick={() => handleEdit(s._id)}
                         className="p-2 text-gray-500 rounded-full transition-colors cursor-pointer"

@@ -277,6 +277,7 @@ export default function Home() {
           transition={{ duration: 0.5 }}
           className="grid grid-cols-1 md:grid-cols-3 gap-8"
         >
+          {/* Mobile Add Form */}
           <motion.div 
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -286,7 +287,7 @@ export default function Home() {
               type: "spring",
               stiffness: 100
             }}
-            className="md:col-span-1"
+            className="md:hidden"
           >
             <div className="bg-white rounded-lg shadow">
               <div className="p-4 border-b">
@@ -307,52 +308,58 @@ export default function Home() {
               type: "spring",
               stiffness: 100
             }}
-            className="md:col-span-2"
+            className="md:col-span-3"
           >
             <div className="bg-white rounded-lg shadow">
               <div className="p-4 border-b flex justify-between items-center">
                 <h2 className="text-lg font-semibold">Your Schedule</h2>
-                <Menu as="div" className="relative">
-                  <Menu.Button className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors">
-                    Sort by: {sortOptions.find(opt => opt.value === sortField)?.label}
-                    <ChevronUpDownIcon className="w-4 h-4" />
-                  </Menu.Button>
-                  <Transition
-                    as={Fragment}
-                    enter="transition ease-out duration-100"
-                    enterFrom="transform opacity-0 scale-95"
-                    enterTo="transform opacity-100 scale-100"
-                    leave="transition ease-in duration-75"
-                    leaveFrom="transform opacity-100 scale-100"
-                    leaveTo="transform opacity-0 scale-95"
-                  >
-                    <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
-                      <div className="py-1">
-                        {sortOptions.map((option) => (
-                          <Menu.Item key={option.value}>
-                            {({ active }) => (
-                              <button
-                                onClick={() => handleSort(option.value as SortField)}
-                                className={`${
-                                  active ? 'bg-gray-100' : ''
-                                } ${
-                                  sortField === option.value ? 'text-blue-600' : 'text-gray-700'
-                                } flex w-full items-center px-4 py-2 text-sm`}
-                              >
-                                {option.label}
-                                {sortField === option.value && (
-                                  <span className="ml-2 text-xs text-gray-500">
-                                    ({sortDirection === 'asc' ? '↑' : '↓'})
-                                  </span>
-                                )}
-                              </button>
-                            )}
-                          </Menu.Item>
-                        ))}
-                      </div>
-                    </Menu.Items>
-                  </Transition>
-                </Menu>
+                <div className="flex items-center gap-4">
+                  {/* Desktop Add Button */}
+                  <div className="hidden md:block w-full text-center">
+                    <ScheduleForm onAdded={handleSchedulesChange} />
+                  </div>
+                  <Menu as="div" className="relative">
+                    <Menu.Button className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors">
+                      Sort by: {sortOptions.find(opt => opt.value === sortField)?.label}
+                      <ChevronUpDownIcon className="w-4 h-4" />
+                    </Menu.Button>
+                    <Transition
+                      as={Fragment}
+                      enter="transition ease-out duration-100"
+                      enterFrom="transform opacity-0 scale-95"
+                      enterTo="transform opacity-100 scale-100"
+                      leave="transition ease-in duration-75"
+                      leaveFrom="transform opacity-100 scale-100"
+                      leaveTo="transform opacity-0 scale-95"
+                    >
+                      <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+                        <div className="py-1">
+                          {sortOptions.map((option) => (
+                            <Menu.Item key={option.value}>
+                              {({ active }) => (
+                                <button
+                                  onClick={() => handleSort(option.value as SortField)}
+                                  className={`${
+                                    active ? 'bg-gray-100' : ''
+                                  } ${
+                                    sortField === option.value ? 'text-blue-600' : 'text-gray-700'
+                                  } flex w-full items-center px-4 py-2 text-sm`}
+                                >
+                                  {option.label}
+                                  {sortField === option.value && (
+                                    <span className="ml-2 text-xs text-gray-500">
+                                      ({sortDirection === 'asc' ? '↑' : '↓'})
+                                    </span>
+                                  )}
+                                </button>
+                              )}
+                            </Menu.Item>
+                          ))}
+                        </div>
+                      </Menu.Items>
+                    </Transition>
+                  </Menu>
+                </div>
               </div>
               <div className="p-4">
                 <ScheduleTable 
