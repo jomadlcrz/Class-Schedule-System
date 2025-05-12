@@ -447,14 +447,14 @@ export default function ScheduleTable({
                 >
                   <button
                     onClick={() => handleEdit(s._id)}
-                    className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors cursor-pointer"
+                    className="p-2 text-gray-500 rounded-full transition-colors cursor-pointer"
                     title="Edit"
                   >
                     <PencilSquareIcon className="w-5 h-5" />
                   </button>
                   <button
                     onClick={() => openDeleteModal(s._id)}
-                    className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors cursor-pointer"
+                    className="p-2 text-gray-500 rounded-full transition-colors cursor-pointer"
                     title="Delete"
                   >
                     <TrashIcon className="w-5 h-5" />
@@ -577,14 +577,14 @@ export default function ScheduleTable({
                     <div className="flex gap-1">
                       <button
                         onClick={() => handleEdit(s._id)}
-                        className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors cursor-pointer"
+                        className="p-2 text-gray-500 rounded-full transition-colors cursor-pointer"
                         title="Edit"
                       >
                         <PencilSquareIcon className="w-5 h-5" />
                       </button>
                       <button
                         onClick={() => openDeleteModal(s._id)}
-                        className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors cursor-pointer"
+                        className="p-2 text-gray-500 rounded-full transition-colors cursor-pointer"
                         title="Delete"
                       >
                         <TrashIcon className="w-5 h-5" />
@@ -664,7 +664,7 @@ export default function ScheduleTable({
                           value={editForm?.courseCode || ''}
                           onChange={handleEditChange}
                           placeholder="Course Code"
-                          className={`w-full p-2 border rounded ${validationErrors.courseCode ? 'border-red-500' : ''}`}
+                          className={`w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${validationErrors.courseCode ? 'border-red-500' : ''}`}
                           required
                         />
                         {validationErrors.courseCode && (
@@ -677,7 +677,7 @@ export default function ScheduleTable({
                           value={editForm?.descriptiveTitle || ''}
                           onChange={handleEditChange}
                           placeholder="Descriptive Title"
-                          className={`w-full p-2 border rounded ${validationErrors.descriptiveTitle ? 'border-red-500' : ''}`}
+                          className={`w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${validationErrors.descriptiveTitle ? 'border-red-500' : ''}`}
                           required
                         />
                         {validationErrors.descriptiveTitle && (
@@ -692,7 +692,7 @@ export default function ScheduleTable({
                           placeholder="Units"
                           type="number"
                           min="1"
-                          className="w-full p-2 border rounded"
+                          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                           required
                         />
                       </div>
@@ -702,7 +702,7 @@ export default function ScheduleTable({
                           value={editForm?.days || ''}
                           onChange={handleEditChange}
                           placeholder="Days"
-                          className="w-full p-2 border rounded"
+                          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                           required
                         />
                       </div>
@@ -776,7 +776,7 @@ export default function ScheduleTable({
                           value={editForm?.room || ''}
                           onChange={handleEditChange}
                           placeholder="Room"
-                          className="w-full p-2 border rounded"
+                          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                           required
                         />
                       </div>
@@ -786,7 +786,7 @@ export default function ScheduleTable({
                           value={editForm?.instructor || ''}
                           onChange={handleEditChange}
                           placeholder="Instructor"
-                          className="w-full p-2 border rounded"
+                          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                           required
                         />
                       </div>
@@ -796,7 +796,7 @@ export default function ScheduleTable({
                       <button
                         type="submit"
                         disabled={isSaving || Object.keys(validationErrors).some(key => validationErrors[key as keyof typeof validationErrors])}
-                        className="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed items-center gap-2"
+                        className="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed items-center gap-2"
                       >
                         {isSaving ? (
                           <>

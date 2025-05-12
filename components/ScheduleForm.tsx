@@ -282,7 +282,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           onChange={handleChange}
           placeholder="Course Code"
           required
-          className={`w-full p-2 border rounded ${validationErrors.courseCode ? 'border-red-500' : ''}`}
+          className={`w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${validationErrors.courseCode ? 'border-red-500' : ''}`}
         />
         {validationErrors.courseCode && (
           <p className="mt-1 text-sm text-red-600">{validationErrors.courseCode}</p>
@@ -300,7 +300,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           onChange={handleChange}
           placeholder="Descriptive Title"
           required
-          className={`w-full p-2 border rounded ${validationErrors.descriptiveTitle ? 'border-red-500' : ''}`}
+          className={`w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${validationErrors.descriptiveTitle ? 'border-red-500' : ''}`}
         />
         {validationErrors.descriptiveTitle && (
           <p className="mt-1 text-sm text-red-600">{validationErrors.descriptiveTitle}</p>
@@ -320,7 +320,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           required
           type="number"
           min="1"
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
       </motion.div>
       <motion.div
@@ -335,7 +335,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           onChange={handleChange}
           placeholder="Days (e.g., MWF, TTH)"
           required
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
       </motion.div>
       <motion.div 
@@ -420,7 +420,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           onChange={handleChange}
           placeholder="Room"
           required
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
       </motion.div>
       <motion.div
@@ -435,14 +435,14 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           onChange={handleChange}
           placeholder="Instructor"
           required
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
       </motion.div>
       
       <motion.button
         type="submit"
         disabled={isSubmitting || Object.keys(validationErrors).some(key => validationErrors[key as keyof typeof validationErrors])}
-        className="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors cursor-pointer disabled:opacity-50 disabled:bg-blue-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="w-full bg-blue-600 text-white px-4 py-2 rounded transition-colors cursor-pointer disabled:opacity-50 disabled:bg-blue-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -491,7 +491,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           onChange={handleChange}
           placeholder="Course Code"
           required
-          className={`w-full p-2 border rounded ${validationErrors.courseCode ? 'border-red-500' : ''}`}
+          className={`w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${validationErrors.courseCode ? 'border-red-500' : ''}`}
         />
         {validationErrors.courseCode && (
           <p className="mt-1 text-sm text-red-600">{validationErrors.courseCode}</p>
@@ -509,7 +509,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           onChange={handleChange}
           placeholder="Descriptive Title"
           required
-          className={`w-full p-2 border rounded ${validationErrors.descriptiveTitle ? 'border-red-500' : ''}`}
+          className={`w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${validationErrors.descriptiveTitle ? 'border-red-500' : ''}`}
         />
         {validationErrors.descriptiveTitle && (
           <p className="mt-1 text-sm text-red-600">{validationErrors.descriptiveTitle}</p>
@@ -529,7 +529,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           required
           type="number"
           min="1"
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
       </motion.div>
       <motion.div
@@ -544,7 +544,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           onChange={handleChange}
           placeholder="Days (e.g., MWF, TTH)"
           required
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
       </motion.div>
       <motion.div 
@@ -629,7 +629,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           onChange={handleChange}
           placeholder="Room"
           required
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
       </motion.div>
       <motion.div
@@ -644,7 +644,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
           onChange={handleChange}
           placeholder="Instructor"
           required
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
       </motion.div>
       
@@ -652,7 +652,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
         <motion.button
           type="submit"
           disabled={isSubmitting || Object.keys(validationErrors).some(key => validationErrors[key as keyof typeof validationErrors])}
-          className="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors cursor-pointer disabled:opacity-50 disabled:bg-blue-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="w-full bg-blue-600 text-white px-4 py-2 rounded transition-colors cursor-pointer disabled:opacity-50 disabled:bg-blue-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -688,7 +688,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
       >
         <button
           onClick={() => setIsModalOpen(true)}
-          className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors cursor-pointer"
+          className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded transition-colors cursor-pointer"
         >
           <PlusIcon className="h-5 w-5" />
           Add New Schedule
