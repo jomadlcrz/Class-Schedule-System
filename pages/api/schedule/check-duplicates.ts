@@ -1,16 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import clientPromise from '../../../lib/mongodb';
 import { ObjectId } from 'mongodb';
-
-interface DuplicateQuery {
-  $or: Array<{
-    courseCode?: string;
-    descriptiveTitle?: string;
-  }>;
-  _id?: {
-    $ne: ObjectId;
-  };
-}
+import { DuplicateQuery } from '../../../interfaces/duplicate';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {

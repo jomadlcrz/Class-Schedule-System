@@ -6,20 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import 'react-time-picker/dist/TimePicker.css';
 import 'react-clock/dist/Clock.css';
 import debounce from 'lodash/debounce';
-
-type Schedule = {
-  _id: string;
-  courseCode: string;
-  descriptiveTitle: string;
-  units: string;
-  days: string;
-  time: string;
-  room: string;
-  instructor: string;
-};
-
-type SortField = 'courseCode' | 'descriptiveTitle' | 'units' | 'days' | 'time' | 'room' | 'instructor';
-type SortDirection = 'asc' | 'desc';
+import { Schedule, SortField, SortDirection } from '../types/schedule';
 
 function generateTimeOptions() {
   const times = [];

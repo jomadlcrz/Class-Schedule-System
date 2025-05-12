@@ -6,19 +6,9 @@ import { motion } from 'framer-motion';
 import 'react-time-picker/dist/TimePicker.css';
 import 'react-clock/dist/Clock.css';
 import debounce from 'lodash/debounce';
+import { Schedule } from '../types/schedule';
 
 type ScheduleFormData = {
-  courseCode: string;
-  descriptiveTitle: string;
-  units: string;
-  days: string;
-  time: string;
-  room: string;
-  instructor: string;
-};
-
-type Schedule = {
-  _id: string;
   courseCode: string;
   descriptiveTitle: string;
   units: string;
