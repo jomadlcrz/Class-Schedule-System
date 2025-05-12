@@ -70,14 +70,6 @@ export default function ScheduleTable({
   const filteredEndTimes = endTimeQuery === ''
     ? timeOptions.filter(time => {
         if (!startTime) return true;
-        const parseTimeToMinutes = (timeStr: string) => {
-          const [time, period] = timeStr.split(' ');
-          const [hours, minutes] = time.split(':').map(Number);
-          let totalMinutes = hours * 60 + minutes;
-          if (period === 'PM' && hours !== 12) totalMinutes += 12 * 60;
-          if (period === 'AM' && hours === 12) totalMinutes -= 12 * 60;
-          return totalMinutes;
-        };
         const startMinutes = parseTimeToMinutes(startTime);
         const endMinutes = parseTimeToMinutes(time);
         return endMinutes > startMinutes;
@@ -85,14 +77,6 @@ export default function ScheduleTable({
     : timeOptions.filter((time) => {
         if (!time.toLowerCase().includes(endTimeQuery.toLowerCase())) return false;
         if (!startTime) return true;
-        const parseTimeToMinutes = (timeStr: string) => {
-          const [time, period] = timeStr.split(' ');
-          const [hours, minutes] = time.split(':').map(Number);
-          let totalMinutes = hours * 60 + minutes;
-          if (period === 'PM' && hours !== 12) totalMinutes += 12 * 60;
-          if (period === 'AM' && hours === 12) totalMinutes -= 12 * 60;
-          return totalMinutes;
-        };
         const startMinutes = parseTimeToMinutes(startTime);
         const endMinutes = parseTimeToMinutes(time);
         return endMinutes > startMinutes;
@@ -434,14 +418,14 @@ export default function ScheduleTable({
                 >
                   <button
                     onClick={() => handleEdit(s._id)}
-                    className="p-2 text-gray-500 rounded-full transition-colors cursor-pointer"
+                    className="p-2 text-gray-500 rounded-full transition-colors cursor-pointer enable-mobile-hover hover:bg-gray-100 hover:text-blue-600"
                     title="Edit"
                   >
                     <PencilSquareIcon className="w-5 h-5" />
                   </button>
                   <button
                     onClick={() => openDeleteModal(s._id)}
-                    className="p-2 text-gray-500 rounded-full transition-colors cursor-pointer"
+                    className="p-2 text-gray-500 rounded-full transition-colors cursor-pointer enable-mobile-hover hover:bg-gray-100 hover:text-red-600"
                     title="Delete"
                   >
                     <TrashIcon className="w-5 h-5" />
@@ -498,43 +482,43 @@ export default function ScheduleTable({
           >
             <tr>
               <th 
-                className="border p-2 text-left cursor-pointer hover:bg-gray-200"
+                className="border p-2 text-left cursor-pointer enable-mobile-hover hover:bg-gray-200 transition-colors"
                 onClick={() => onSort('courseCode')}
               >
                 Course Code <SortIcon field="courseCode" />
               </th>
               <th 
-                className="border p-2 text-left cursor-pointer hover:bg-gray-200"
+                className="border p-2 text-left cursor-pointer enable-mobile-hover hover:bg-gray-200 transition-colors"
                 onClick={() => onSort('descriptiveTitle')}
               >
                 Descriptive Title <SortIcon field="descriptiveTitle" />
               </th>
               <th 
-                className="border p-2 text-center cursor-pointer hover:bg-gray-200"
+                className="border p-2 text-center cursor-pointer enable-mobile-hover hover:bg-gray-200 transition-colors"
                 onClick={() => onSort('units')}
               >
                 Units <SortIcon field="units" />
               </th>
               <th 
-                className="border p-2 text-center cursor-pointer hover:bg-gray-200"
+                className="border p-2 text-center cursor-pointer enable-mobile-hover hover:bg-gray-200 transition-colors"
                 onClick={() => onSort('days')}
               >
                 Days <SortIcon field="days" />
               </th>
               <th 
-                className="border p-2 text-center cursor-pointer hover:bg-gray-200"
+                className="border p-2 text-center cursor-pointer enable-mobile-hover hover:bg-gray-200 transition-colors"
                 onClick={() => onSort('time')}
               >
                 Time <SortIcon field="time" />
               </th>
               <th 
-                className="border p-2 text-center cursor-pointer hover:bg-gray-200"
+                className="border p-2 text-center cursor-pointer enable-mobile-hover hover:bg-gray-200 transition-colors"
                 onClick={() => onSort('room')}
               >
                 Room <SortIcon field="room" />
               </th>
               <th 
-                className="border p-2 text-left cursor-pointer hover:bg-gray-200"
+                className="border p-2 text-left cursor-pointer enable-mobile-hover hover:bg-gray-200 transition-colors"
                 onClick={() => onSort('instructor')}
               >
                 Instructor <SortIcon field="instructor" />
@@ -551,7 +535,7 @@ export default function ScheduleTable({
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 20 }}
                   transition={{ duration: 0.3, delay: index * 0.05 }}
-                  className="hover:bg-gray-50"
+                  className="enable-mobile-hover hover:bg-gray-50"
                 >
                   <td className="border p-2">{s.courseCode}</td>
                   <td className="border p-2">{s.descriptiveTitle}</td>
@@ -564,14 +548,14 @@ export default function ScheduleTable({
                     <div className="flex justify-center gap-1">
                       <button
                         onClick={() => handleEdit(s._id)}
-                        className="p-2 text-gray-500 rounded-full transition-colors cursor-pointer"
+                        className="p-2 text-gray-500 rounded-full transition-colors cursor-pointer enable-mobile-hover hover:bg-gray-100 hover:text-blue-600"
                         title="Edit"
                       >
                         <PencilSquareIcon className="w-5 h-5" />
                       </button>
                       <button
                         onClick={() => openDeleteModal(s._id)}
-                        className="p-2 text-gray-500 rounded-full transition-colors cursor-pointer"
+                        className="p-2 text-gray-500 rounded-full transition-colors cursor-pointer enable-mobile-hover hover:bg-gray-100 hover:text-red-600"
                         title="Delete"
                       >
                         <TrashIcon className="w-5 h-5" />
@@ -618,7 +602,7 @@ export default function ScheduleTable({
                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all relative">
                   <button
                     onClick={handleForceClose}
-                    className="absolute top-4 right-4 text-gray-400 hover:text-gray-500 focus:outline-none"
+                    className="absolute top-4 right-4 text-gray-400 enable-mobile-hover hover:text-gray-600 focus:outline-none transition-colors"
                   >
                     <XMarkIcon className="h-6 w-6" />
                   </button>
@@ -651,7 +635,7 @@ export default function ScheduleTable({
                           value={editForm?.courseCode || ''}
                           onChange={handleEditChange}
                           placeholder="Course Code"
-                          className={`w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${validationErrors.courseCode ? 'border-red-500' : ''}`}
+                          className={`w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent enable-mobile-hover hover:border-gray-400 transition-colors ${validationErrors.courseCode ? 'border-red-500' : ''}`}
                           required
                         />
                         {validationErrors.courseCode && (
@@ -664,7 +648,7 @@ export default function ScheduleTable({
                           value={editForm?.descriptiveTitle || ''}
                           onChange={handleEditChange}
                           placeholder="Descriptive Title"
-                          className={`w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${validationErrors.descriptiveTitle ? 'border-red-500' : ''}`}
+                          className={`w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent enable-mobile-hover hover:border-gray-400 transition-colors ${validationErrors.descriptiveTitle ? 'border-red-500' : ''}`}
                           required
                         />
                         {validationErrors.descriptiveTitle && (
@@ -679,7 +663,7 @@ export default function ScheduleTable({
                           placeholder="Units"
                           type="number"
                           min="1"
-                          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent enable-mobile-hover hover:border-gray-400 transition-colors"
                           required
                         />
                       </div>
@@ -689,7 +673,7 @@ export default function ScheduleTable({
                           value={editForm?.days || ''}
                           onChange={handleEditChange}
                           placeholder="Days"
-                          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent enable-mobile-hover hover:border-gray-400 transition-colors"
                           required
                         />
                       </div>
@@ -703,7 +687,7 @@ export default function ScheduleTable({
                               setEndTimeQuery('');
                             }}>
                               <div className="relative">
-                                <Combobox.Button className="w-full p-2 border rounded flex justify-between items-center bg-white h-[42px]">
+                                <Combobox.Button className="w-full p-2 border rounded flex justify-between items-center bg-white h-[42px] enable-mobile-hover hover:border-gray-400 transition-colors">
                                   <span className={(startTime ? '' : 'text-gray-400 text-xs') + ' truncate'}>
                                     {startTime || 'Select start time'}
                                   </span>
@@ -731,7 +715,7 @@ export default function ScheduleTable({
                           <div className="flex-1 min-w-0">
                             <Combobox value={endTime} onChange={setEndTime} disabled={!startTime}>
                               <div className="relative">
-                                <Combobox.Button className={`w-full p-2 border rounded flex justify-between items-center ${!startTime ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'} h-[42px]`} disabled={!startTime}>
+                                <Combobox.Button className={`w-full p-2 border rounded flex justify-between items-center ${!startTime ? 'bg-gray-100 cursor-not-allowed' : 'bg-white enable-mobile-hover hover:border-gray-400'} h-[42px] transition-colors`} disabled={!startTime}>
                                   <span className={(!startTime ? 'text-gray-400 text-xs' : endTime ? '' : 'text-gray-400 text-xs') + ' truncate'}>
                                     {startTime ? (endTime || 'Select end time') : 'Select start time first'}
                                   </span>
@@ -763,7 +747,7 @@ export default function ScheduleTable({
                           value={editForm?.room || ''}
                           onChange={handleEditChange}
                           placeholder="Room"
-                          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent enable-mobile-hover hover:border-gray-400 transition-colors"
                           required
                         />
                       </div>
@@ -773,7 +757,7 @@ export default function ScheduleTable({
                           value={editForm?.instructor || ''}
                           onChange={handleEditChange}
                           placeholder="Instructor"
-                          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent enable-mobile-hover hover:border-gray-400 transition-colors"
                           required
                         />
                       </div>
@@ -783,7 +767,7 @@ export default function ScheduleTable({
                       <button
                         type="submit"
                         disabled={isSaving || Object.keys(validationErrors).some(key => validationErrors[key as keyof typeof validationErrors])}
-                        className="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed items-center gap-2"
+                        className="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed items-center gap-2 enable-mobile-hover hover:opacity-80 transition-all"
                       >
                         {isSaving ? (
                           <>
@@ -846,14 +830,14 @@ export default function ScheduleTable({
                   <div className="mt-6 flex justify-end gap-3">
                     <button
                       type="button"
-                      className="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 cursor-pointer"
+                      className="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 enable-mobile-hover hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 cursor-pointer transition-colors"
                       onClick={() => setIsDeleteModalOpen(false)}
                     >
                       Cancel
                     </button>
                     <button
                       type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 cursor-pointer"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white enable-mobile-hover hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 cursor-pointer transition-colors"
                       onClick={() => deleteId && handleDelete(deleteId)}
                     >
                       Delete

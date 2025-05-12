@@ -244,7 +244,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
       >
         <button
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-md transition-colors cursor-pointer text-sm font-medium hover:bg-blue-700 mx-auto"
+          className="flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-md transition-all cursor-pointer text-sm font-medium enable-mobile-hover hover:opacity-80 mx-auto"
         >
           <PlusIcon className="h-5 w-5" />
           Add New Schedule
@@ -288,7 +288,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all relative">
                   <button
                     onClick={() => setIsModalOpen(false)}
-                    className="absolute top-4 right-4 text-gray-400 hover:text-gray-500 focus:outline-none"
+                    className="absolute top-4 right-4 text-gray-400 enable-mobile-hover hover:text-gray-600 focus:outline-none transition-colors"
                   >
                     <XMarkIcon className="h-6 w-6" />
                   </button>
@@ -314,7 +314,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
                         onChange={handleChange}
                         placeholder="Course Code"
                         required
-                        className={`w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${validationErrors.courseCode ? 'border-red-500' : ''}`}
+                        className={`w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent enable-mobile-hover hover:border-gray-400 transition-colors ${validationErrors.courseCode ? 'border-red-500' : ''}`}
                       />
                       {validationErrors.courseCode && (
                         <p className="mt-1 text-sm text-red-600">{validationErrors.courseCode}</p>
@@ -327,7 +327,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
                         onChange={handleChange}
                         placeholder="Descriptive Title"
                         required
-                        className={`w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${validationErrors.descriptiveTitle ? 'border-red-500' : ''}`}
+                        className={`w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent enable-mobile-hover hover:border-gray-400 transition-colors ${validationErrors.descriptiveTitle ? 'border-red-500' : ''}`}
                       />
                       {validationErrors.descriptiveTitle && (
                         <p className="mt-1 text-sm text-red-600">{validationErrors.descriptiveTitle}</p>
@@ -342,7 +342,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
                         required
                         type="number"
                         min="1"
-                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent [@media(hover:hover)]:hover:border-gray-400 transition-colors"
                       />
                     </div>
                     <div>
@@ -352,7 +352,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
                         onChange={handleChange}
                         placeholder="Days (e.g., MWF, TTH)"
                         required
-                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent [@media(hover:hover)]:hover:border-gray-400 transition-colors"
                       />
                     </div>
                     <div className="space-y-2">
@@ -365,7 +365,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
                             setEndTimeQuery('');
                           }}>
                             <div className="relative">
-                              <Combobox.Button className="w-full p-2 border rounded flex justify-between items-center bg-white h-[42px]">
+                              <Combobox.Button className="w-full p-2 border rounded flex justify-between items-center bg-white h-[42px] enable-mobile-hover hover:border-gray-400 transition-colors">
                                 <span className={(startTime ? '' : 'text-gray-400 text-xs') + ' truncate'}>
                                   {startTime || 'Select start time'}
                                 </span>
@@ -393,7 +393,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
                         <div className="flex-1 min-w-0">
                           <Combobox value={endTime} onChange={setEndTime} disabled={!startTime}>
                             <div className="relative">
-                              <Combobox.Button className={`w-full p-2 border rounded flex justify-between items-center ${!startTime ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'} h-[42px]`} disabled={!startTime}>
+                              <Combobox.Button className={`w-full p-2 border rounded flex justify-between items-center ${!startTime ? 'bg-gray-100 cursor-not-allowed' : 'bg-white enable-mobile-hover hover:border-gray-400'} h-[42px] transition-colors`} disabled={!startTime}>
                                 <span className={(!startTime ? 'text-gray-400 text-xs' : endTime ? '' : 'text-gray-400 text-xs') + ' truncate'}>
                                   {startTime ? (endTime || 'Select end time') : 'Select start time first'}
                                 </span>
@@ -426,7 +426,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
                         onChange={handleChange}
                         placeholder="Room"
                         required
-                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent [@media(hover:hover)]:hover:border-gray-400 transition-colors"
                       />
                     </div>
                     <div>
@@ -436,14 +436,14 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
                         onChange={handleChange}
                         placeholder="Instructor"
                         required
-                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent [@media(hover:hover)]:hover:border-gray-400 transition-colors"
                       />
                     </div>
                     
                     <button
                       type="submit"
                       disabled={isSubmitting || Object.keys(validationErrors).some(key => validationErrors[key as keyof typeof validationErrors])}
-                      className="w-full inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed items-center gap-2"
+                      className="w-full inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed items-center gap-2 enable-mobile-hover hover:opacity-80 transition-all"
                     >
                       {isSubmitting ? (
                         <>

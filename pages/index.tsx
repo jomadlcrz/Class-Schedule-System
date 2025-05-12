@@ -154,12 +154,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <motion.header 
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ type: "spring", stiffness: 100 }}
-        className="bg-white shadow"
-      >
+      <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <button
             onClick={() => window.location.reload()}
@@ -209,9 +204,7 @@ export default function Home() {
                 <div className="py-1">
                   <Menu.Item>
                     {({ active }) => (
-                      <div className={`${
-                        active ? 'bg-gray-100' : ''
-                      } px-4 py-2 text-sm text-gray-700 flex items-center gap-2`}>
+                      <div className="px-4 py-2 text-sm text-gray-700 flex items-center gap-2 enable-mobile-hover hover:bg-gray-100 transition-colors">
                         <EnvelopeIcon className="h-5 w-5 text-gray-400" />
                         <span>{session.user?.email}</span>
                       </div>
@@ -221,9 +214,7 @@ export default function Home() {
                     {({ active }) => (
                       <button
                         onClick={() => signOut()}
-                        className={`${
-                          active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
-                        } flex w-full items-center gap-2 px-4 py-2 text-left text-sm cursor-pointer`}
+                        className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm cursor-pointer text-gray-700 enable-mobile-hover hover:bg-gray-100 enable-mobile-hover hover:text-gray-900 transition-colors"
                       >
                         <ArrowRightOnRectangleIcon className="h-5 w-5 text-gray-400" />
                         Sign out
@@ -235,7 +226,7 @@ export default function Home() {
             </Transition>
           </Menu>
         </div>
-      </motion.header>
+      </header>
 
       <motion.main 
         initial={{ opacity: 0 }}
@@ -277,7 +268,7 @@ export default function Home() {
                   <div className="flex justify-between items-center">
                     <h2 className="text-lg font-semibold">Your Schedule</h2>
                     <Menu as="div" className="relative">
-                      <Menu.Button className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors">
+                      <Menu.Button className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-700 enable-mobile-hover hover:bg-gray-100 rounded-md transition-colors">
                         Sort by: {sortOptions.find(opt => opt.value === sortField)?.label}
                         <ChevronUpDownIcon className="w-4 h-4" />
                       </Menu.Button>
@@ -298,10 +289,8 @@ export default function Home() {
                                   <button
                                     onClick={() => handleSort(option.value as SortField)}
                                     className={`${
-                                      active ? 'bg-gray-100' : ''
-                                    } ${
                                       sortField === option.value ? 'text-blue-600' : 'text-gray-700'
-                                    } flex w-full items-center px-4 py-2 text-sm`}
+                                    } flex w-full items-center px-4 py-2 text-sm enable-mobile-hover hover:bg-gray-100 transition-colors`}
                                   >
                                     {option.label}
                                     {sortField === option.value && (
