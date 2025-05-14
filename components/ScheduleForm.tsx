@@ -342,7 +342,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
                         required
                         type="number"
                         min="1"
-                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent [@media(hover:hover)]:hover:border-gray-400 transition-colors"
+                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent enable-mobile-hover hover:border-gray-400 transition-colors"
                       />
                     </div>
                     <div>
@@ -352,7 +352,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
                         onChange={handleChange}
                         placeholder="Days (e.g., MWF, TTH)"
                         required
-                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent [@media(hover:hover)]:hover:border-gray-400 transition-colors"
+                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent enable-mobile-hover hover:border-gray-400 transition-colors"
                       />
                     </div>
                     <div className="space-y-2">
@@ -426,7 +426,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
                         onChange={handleChange}
                         placeholder="Room"
                         required
-                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent [@media(hover:hover)]:hover:border-gray-400 transition-colors"
+                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent enable-mobile-hover hover:border-gray-400 transition-colors"
                       />
                     </div>
                     <div>
@@ -436,7 +436,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
                         onChange={handleChange}
                         placeholder="Instructor"
                         required
-                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent [@media(hover:hover)]:hover:border-gray-400 transition-colors"
+                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent enable-mobile-hover hover:border-gray-400 transition-colors"
                       />
                     </div>
                     
