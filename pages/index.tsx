@@ -1,14 +1,14 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
-import ScheduleForm from "../components/ScheduleForm";
-import ScheduleTable from "../components/ScheduleTable";
+import ScheduleForm from "@/components/ScheduleForm";
+import ScheduleTable from "@/components/ScheduleTable";
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { EnvelopeIcon, ArrowRightOnRectangleIcon, ChevronUpDownIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
-import { Schedule, SortField, SortDirection } from '../types';
+import { Schedule, SortField, SortDirection } from '@/types';
 
 export default function Home() {
   const { data: session, status } = useSession();

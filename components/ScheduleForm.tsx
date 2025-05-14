@@ -2,24 +2,11 @@ import { useState, useEffect } from 'react';
 import { Dialog, Transition, Combobox } from '@headlessui/react';
 import { Fragment } from 'react';
 import { PlusIcon, ChevronUpDownIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { motion } from 'framer-motion';
 import 'react-time-picker/dist/TimePicker.css';
 import 'react-clock/dist/Clock.css';
 import debounce from 'lodash/debounce';
-import { Schedule, ScheduleFormData } from '../types';
-
-function generateTimeOptions() {
-  const times = [];
-  for (let hour = 7; hour <= 20; hour++) {
-    for (let minute = 0; minute < 60; minute += 30) {
-      const period = hour >= 12 ? 'PM' : 'AM';
-      const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
-      const time = `${displayHour}:${minute.toString().padStart(2, '0')} ${period}`;
-      times.push(time);
-    }
-  }
-  return times;
-}
+import { Schedule, ScheduleFormData } from '@/types';
+import { generateTimeOptions, parseTimeToMinutes } from '@/utils/time';
 
 export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: Schedule[]) => Schedule[]) => void }) {
   const [formData, setFormData] = useState<ScheduleFormData>({
@@ -54,27 +41,11 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
   const filteredEndTimes = endTimeQuery === ''
     ? timeOptions.filter(time => {
         if (!startTime) return true;
-        const parseTimeToMinutes = (timeStr: string) => {
-          const [time, period] = timeStr.split(' ');
-          const [hours, minutes] = time.split(':').map(Number);
-          let totalMinutes = hours * 60 + minutes;
-          if (period === 'PM' && hours !== 12) totalMinutes += 12 * 60;
-          if (period === 'AM' && hours === 12) totalMinutes -= 12 * 60;
-          return totalMinutes;
-        };
         return parseTimeToMinutes(time) > parseTimeToMinutes(startTime);
       })
     : timeOptions.filter((time) => {
         if (!time.toLowerCase().includes(endTimeQuery.toLowerCase())) return false;
         if (!startTime) return true;
-        const parseTimeToMinutes = (timeStr: string) => {
-          const [time, period] = timeStr.split(' ');
-          const [hours, minutes] = time.split(':').map(Number);
-          let totalMinutes = hours * 60 + minutes;
-          if (period === 'PM' && hours !== 12) totalMinutes += 12 * 60;
-          if (period === 'AM' && hours === 12) totalMinutes -= 12 * 60;
-          return totalMinutes;
-        };
         return parseTimeToMinutes(time) > parseTimeToMinutes(startTime);
       });
 
