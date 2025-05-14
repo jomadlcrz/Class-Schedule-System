@@ -482,46 +482,88 @@ export default function ScheduleTable({
           >
             <tr>
               <th 
-                className="border p-2 text-left cursor-pointer enable-mobile-hover hover:bg-gray-200 transition-colors"
+                className="border p-2 text-left cursor-pointer transition-all duration-200 hover:bg-gray-100 group"
                 onClick={() => onSort('courseCode')}
               >
-                Course Code <SortIcon field="courseCode" />
+                <div className="flex items-center text-gray-500 hover:text-gray-700">
+                  Course Code 
+                  <SortIcon field="courseCode" />
+                  <span className="ml-1 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    {sortField === 'courseCode' ? (sortDirection === 'asc' ? '↑' : '↓') : '↕'}
+                  </span>
+                </div>
               </th>
               <th 
-                className="border p-2 text-left cursor-pointer enable-mobile-hover hover:bg-gray-200 transition-colors"
+                className="border p-2 text-left cursor-pointer transition-all duration-200 hover:bg-gray-100 group"
                 onClick={() => onSort('descriptiveTitle')}
               >
-                Descriptive Title <SortIcon field="descriptiveTitle" />
+                <div className="flex items-center text-gray-500 hover:text-gray-700">
+                  Descriptive Title 
+                  <SortIcon field="descriptiveTitle" />
+                  <span className="ml-1 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    {sortField === 'descriptiveTitle' ? (sortDirection === 'asc' ? '↑' : '↓') : '↕'}
+                  </span>
+                </div>
               </th>
               <th 
-                className="border p-2 text-center cursor-pointer enable-mobile-hover hover:bg-gray-200 transition-colors"
+                className="border p-2 text-center cursor-pointer transition-all duration-200 hover:bg-gray-100 group"
                 onClick={() => onSort('units')}
               >
-                Units <SortIcon field="units" />
+                <div className="flex items-center justify-center text-gray-500 hover:text-gray-700">
+                  Units 
+                  <SortIcon field="units" />
+                  <span className="ml-1 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    {sortField === 'units' ? (sortDirection === 'asc' ? '↑' : '↓') : '↕'}
+                  </span>
+                </div>
               </th>
               <th 
-                className="border p-2 text-center cursor-pointer enable-mobile-hover hover:bg-gray-200 transition-colors"
+                className="border p-2 text-center cursor-pointer transition-all duration-200 hover:bg-gray-100 group"
                 onClick={() => onSort('days')}
               >
-                Days <SortIcon field="days" />
+                <div className="flex items-center justify-center text-gray-500 hover:text-gray-700">
+                  Days 
+                  <SortIcon field="days" />
+                  <span className="ml-1 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    {sortField === 'days' ? (sortDirection === 'asc' ? '↑' : '↓') : '↕'}
+                  </span>
+                </div>
               </th>
               <th 
-                className="border p-2 text-center cursor-pointer enable-mobile-hover hover:bg-gray-200 transition-colors"
+                className="border p-2 text-center cursor-pointer transition-all duration-200 hover:bg-gray-100 group"
                 onClick={() => onSort('time')}
               >
-                Time <SortIcon field="time" />
+                <div className="flex items-center justify-center text-gray-500 hover:text-gray-700">
+                  Time 
+                  <SortIcon field="time" />
+                  <span className="ml-1 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    {sortField === 'time' ? (sortDirection === 'asc' ? '↑' : '↓') : '↕'}
+                  </span>
+                </div>
               </th>
               <th 
-                className="border p-2 text-center cursor-pointer enable-mobile-hover hover:bg-gray-200 transition-colors"
+                className="border p-2 text-center cursor-pointer transition-all duration-200 hover:bg-gray-100 group"
                 onClick={() => onSort('room')}
               >
-                Room <SortIcon field="room" />
+                <div className="flex items-center justify-center text-gray-500 hover:text-gray-700">
+                  Room 
+                  <SortIcon field="room" />
+                  <span className="ml-1 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    {sortField === 'room' ? (sortDirection === 'asc' ? '↑' : '↓') : '↕'}
+                  </span>
+                </div>
               </th>
               <th 
-                className="border p-2 text-left cursor-pointer enable-mobile-hover hover:bg-gray-200 transition-colors"
+                className="border p-2 text-left cursor-pointer transition-all duration-200 hover:bg-gray-100 group"
                 onClick={() => onSort('instructor')}
               >
-                Instructor <SortIcon field="instructor" />
+                <div className="flex items-center text-gray-500 hover:text-gray-700">
+                  Instructor 
+                  <SortIcon field="instructor" />
+                  <span className="ml-1 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    {sortField === 'instructor' ? (sortDirection === 'asc' ? '↑' : '↓') : '↕'}
+                  </span>
+                </div>
               </th>
               <th className="border p-2 text-center">Actions</th>
             </tr>
