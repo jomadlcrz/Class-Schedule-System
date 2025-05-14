@@ -830,14 +830,14 @@ export default function ScheduleTable({
                   <div className="mt-6 flex justify-end gap-3">
                     <button
                       type="button"
-                      className="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 enable-mobile-hover hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 cursor-pointer transition-colors"
+                      className="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 enable-mobile-hover hover:bg-gray-100 hover:border-gray-400 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 cursor-pointer transition-all duration-200"
                       onClick={() => setIsDeleteModalOpen(false)}
                     >
                       Cancel
                     </button>
                     <button
                       type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white enable-mobile-hover hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 cursor-pointer transition-colors"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white enable-mobile-hover hover:opacity-80 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 cursor-pointer transition-all duration-200"
                       onClick={() => deleteId && handleDelete(deleteId)}
                     >
                       Delete
