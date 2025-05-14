@@ -271,7 +271,7 @@ export default function Home() {
                     <Menu as="div" className="relative">
                       <Menu.Button 
                         className={`flex items-center gap-2 px-3 py-1.5 text-sm text-gray-500 rounded-full transition-all duration-200 ${
-                          isSortOpen ? 'bg-gray-100 text-gray-700' : 'hover:bg-gray-100 hover:text-gray-700'
+                          isSortOpen ? 'bg-gray-100 text-gray-700' : 'md:hover:bg-gray-100 md:hover:text-gray-700'
                         }`}
                         onClick={() => setIsSortOpen(true)}
                       >
