@@ -28,6 +28,7 @@ export default function Home() {
     }
     return 'asc';
   });
+  const [isSortOpen, setIsSortOpen] = useState(false);
   const router = useRouter();
 
 
@@ -268,7 +269,12 @@ export default function Home() {
                   <div className="flex justify-between items-center">
                     <h2 className="text-lg font-semibold">Your Schedule</h2>
                     <Menu as="div" className="relative">
-                      <Menu.Button className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-700 enable-mobile-hover hover:bg-gray-100 rounded-md transition-colors">
+                      <Menu.Button 
+                        className={`flex items-center gap-2 px-3 py-1.5 text-sm text-gray-700 rounded-md transition-colors ${
+                          isSortOpen ? 'bg-gray-100' : ''
+                        }`}
+                        onClick={() => setIsSortOpen(true)}
+                      >
                         Sort by: {sortOptions.find(opt => opt.value === sortField)?.label}
                         <ChevronUpDownIcon className="w-4 h-4" />
                       </Menu.Button>
@@ -280,6 +286,7 @@ export default function Home() {
                         leave="transition ease-in duration-75"
                         leaveFrom="transform opacity-100 scale-100"
                         leaveTo="transform opacity-0 scale-95"
+                        afterLeave={() => setIsSortOpen(false)}
                       >
                         <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
                           <div className="py-1">
