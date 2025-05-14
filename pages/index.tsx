@@ -172,7 +172,7 @@ export default function Home() {
           </button>
           <Menu as="div" className="relative inline-block text-left">
             <div>
-              <Menu.Button className="inline-flex w-full justify-center items-center rounded-full cursor-pointer outline-none md:hover:ring-2 md:hover:ring-gray-300 transition-all">
+              <Menu.Button className="inline-flex w-full justify-center items-center rounded-full cursor-pointer focus:outline-none md:hover:ring-2 md:hover:ring-gray-300 transition-all">
                 {session.user?.image ? (
                   <Image
                     src={session.user.image}
