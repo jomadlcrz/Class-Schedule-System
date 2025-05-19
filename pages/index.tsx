@@ -105,10 +105,9 @@ export default function Home() {
             <Image
               src="/logo.png"
               alt="Class Schedule Logo"
-              width={150}
-              height={150}
+              width={136}
+              height={136}
               className="mx-auto"
-              style={{ width: 'auto', height: 'auto' }}
               priority
             />
           </motion.div>
@@ -118,7 +117,7 @@ export default function Home() {
             transition={{ delay: 0.3 }}
             className="text-2xl font-bold mb-6"
           >
-            Welcome to Class Schedule
+            Class Schedule System
           </motion.h1>
           <motion.p 
             initial={{ y: -20, opacity: 0 }}
@@ -145,7 +144,7 @@ export default function Home() {
                 height={20}
                 className="w-5 h-5"
               />
-              Sign in with Google
+              Continue with Google
             </button>
           </motion.div>
         </motion.div>
