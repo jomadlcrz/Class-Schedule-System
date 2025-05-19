@@ -31,7 +31,19 @@ export default function Home() {
   const [isSortOpen, setIsSortOpen] = useState(false);
   const router = useRouter();
 
+  // Add useEffect for click outside handling
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isSortOpen) {
+        setIsSortOpen(false);
+      }
+    };
 
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isSortOpen]);
 
   useEffect(() => {
     if (status === 'authenticated') {
@@ -270,9 +282,12 @@ export default function Home() {
                     <Menu as="div" className="relative">
                       <Menu.Button 
                         className={`flex items-center gap-2 px-3 py-1.5 text-sm text-gray-500 rounded-full transition-all duration-200 ${
-                          isSortOpen ? 'bg-gray-100 text-gray-700' : 'md:hover:bg-gray-100 md:hover:text-gray-700'
+                          isSortOpen ? 'bg-gray-100 text-gray-700' : 'hover:bg-gray-100 hover:text-gray-700'
                         }`}
-                        onClick={() => setIsSortOpen(true)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsSortOpen(!isSortOpen);
+                        }}
                       >
                         Sort by: {sortOptions.find(opt => opt.value === sortField)?.label}
                         <ChevronUpDownIcon className="w-4 h-4 transition-transform duration-200" />
@@ -287,7 +302,10 @@ export default function Home() {
                         leaveTo="transform opacity-0 scale-95"
                         afterLeave={() => setIsSortOpen(false)}
                       >
-                        <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+                        <Menu.Items 
+                          className="absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10"
+                          onClick={(e) => e.stopPropagation()}
+                        >
                           <div className="py-1">
                             {sortOptions.map((option) => (
                               <Menu.Item key={option.value}>
@@ -296,7 +314,7 @@ export default function Home() {
                                     onClick={() => handleSort(option.value as SortField)}
                                     className={`${
                                       sortField === option.value ? 'text-blue-600' : 'text-gray-700'
-                                    } flex w-full items-center px-4 py-2 text-sm enable-mobile-hover hover:bg-gray-100 transition-colors`}
+                                    } flex w-full items-center px-4 py-2 text-sm hover:bg-gray-100 transition-colors`}
                                   >
                                     {option.label}
                                     {sortField === option.value && (
