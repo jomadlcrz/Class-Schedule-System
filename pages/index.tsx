@@ -4,7 +4,7 @@ import ScheduleForm from "@/components/ScheduleForm";
 import ScheduleTable from "@/components/ScheduleTable";
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
-import { EnvelopeIcon, ArrowRightOnRectangleIcon, ChevronUpDownIcon } from '@heroicons/react/24/outline';
+import { EnvelopeIcon, ArrowRightOnRectangleIcon, ChevronUpDownIcon, PencilIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
@@ -213,6 +213,20 @@ export default function Home() {
                   <Menu.Item>
                     {({ active }) => (
                       <button
+                        onClick={() => {
+                          const event = new CustomEvent('openProfileModal', { detail: { isEditMode: true } });
+                          window.dispatchEvent(event);
+                        }}
+                        className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm cursor-pointer text-gray-700 enable-mobile-hover hover:bg-gray-100 enable-mobile-hover hover:text-gray-900 transition-colors"
+                      >
+                        <PencilIcon className="h-5 w-5 text-gray-400" />
+                        Edit Profile
+                      </button>
+                    )}
+                  </Menu.Item>
+                  <Menu.Item>
+                    {({ active }) => (
+                      <button
                         onClick={() => signOut()}
                         className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm cursor-pointer text-gray-700 enable-mobile-hover hover:bg-gray-100 enable-mobile-hover hover:text-gray-900 transition-colors"
                       >
@@ -243,6 +257,26 @@ export default function Home() {
             {error}
           </motion.div>
         )}
+
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.5 }}
+          className="mb-8"
+        >
+          {session.user && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4 text-center">
+              <div className="font-semibold text-blue-900 text-lg">{session.user.program || ''}</div>
+              <div className="text-blue-800 text-base">
+                {session.user.year || ''}{session.user.year ? ':' : ''} {session.user.semester || ''}
+              </div>
+              <div className="text-blue-800 text-base">
+                Academic Year {session.user.academicYear || ''}
+              </div>
+            </div>
+          )}
+        </motion.div>
 
         <motion.div 
           initial={{ opacity: 0, y: 20 }}

@@ -7,6 +7,10 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
+      program?: string;
+      year?: string;
+      semester?: string;
+      academicYear?: string;
     } & DefaultSession["user"]
   }
 }
@@ -33,6 +37,11 @@ export const authOptions: NextAuthOptions = {
     async session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
+        const u = user as any;
+        session.user.program = u.program || null;
+        session.user.year = u.year || null;
+        session.user.semester = u.semester || null;
+        session.user.academicYear = u.academicYear || null;
       }
       return session;
     },

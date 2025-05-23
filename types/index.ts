@@ -9,4 +9,11 @@ export type ScheduleFormData = {
   time: string;
   room: string;
   instructor: string;
+};
+
+export type UserProfile = {
+  program: string;
+  year: string;
+  semester: string;
+  academicYear: string;
 }; 
