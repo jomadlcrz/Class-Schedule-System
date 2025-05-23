@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Dialog, Transition, Combobox } from '@headlessui/react';
 import { Fragment } from 'react';
-import { PlusIcon, ChevronUpDownIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, ChevronUpDownIcon, XMarkIcon, CheckIcon } from '@heroicons/react/24/outline';
 import 'react-time-picker/dist/TimePicker.css';
 import 'react-clock/dist/Clock.css';
 import debounce from 'lodash/debounce';
@@ -242,7 +242,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-gray-100/30 backdrop-blur-[2px]" />
+            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
@@ -285,7 +285,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
                         onChange={handleChange}
                         placeholder="Course Code"
                         required
-                        className={`w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent enable-mobile-hover hover:border-gray-400 transition-colors ${validationErrors.courseCode ? 'border-red-500' : ''}`}
+                        className={`w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 hover:border-gray-400 transition-all duration-200 ${validationErrors.courseCode ? 'border-red-500' : ''}`}
                       />
                       {validationErrors.courseCode && (
                         <p className="mt-1 text-sm text-red-600">{validationErrors.courseCode}</p>
@@ -298,7 +298,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
                         onChange={handleChange}
                         placeholder="Descriptive Title"
                         required
-                        className={`w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent enable-mobile-hover hover:border-gray-400 transition-colors ${validationErrors.descriptiveTitle ? 'border-red-500' : ''}`}
+                        className={`w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 hover:border-gray-400 transition-all duration-200 ${validationErrors.descriptiveTitle ? 'border-red-500' : ''}`}
                       />
                       {validationErrors.descriptiveTitle && (
                         <p className="mt-1 text-sm text-red-600">{validationErrors.descriptiveTitle}</p>
@@ -313,7 +313,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
                         required
                         type="number"
                         min="1"
-                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent enable-mobile-hover hover:border-gray-400 transition-colors"
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 hover:border-gray-400 transition-all duration-200"
                       />
                     </div>
                     <div>
@@ -323,11 +323,11 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
                         onChange={handleChange}
                         placeholder="Days (e.g., MWF, TTH)"
                         required
-                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent enable-mobile-hover hover:border-gray-400 transition-colors"
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 hover:border-gray-400 transition-all duration-200"
                       />
                     </div>
-                    <div className="space-y-2">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Time</label>
+                    <div>
+                      <label className="block mb-1 font-medium text-gray-700">Time</label>
                       <div className="flex flex-row items-center gap-2 min-w-0">
                         <div className="flex-1 min-w-0">
                           <Combobox value={startTime} onChange={(value) => {
@@ -336,24 +336,35 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
                             setEndTimeQuery('');
                           }}>
                             <div className="relative">
-                              <Combobox.Button className="w-full p-2 border rounded flex justify-between items-center bg-white h-[42px] enable-mobile-hover hover:border-gray-400 transition-colors">
-                                <span className={(startTime ? '' : 'text-gray-400 text-xs') + ' truncate'}>
+                              <Combobox.Button className="w-full px-4 py-2.5 border border-gray-300 rounded-lg flex justify-between items-center bg-white hover:border-gray-400 transition-all duration-200">
+                                <span className={(startTime ? 'text-gray-700' : 'text-gray-400') + ' truncate'}>
                                   {startTime || 'Select start time'}
                                 </span>
                                 <ChevronUpDownIcon className="h-5 w-5 text-gray-400 ml-2 flex-shrink-0" aria-hidden="true" />
                               </Combobox.Button>
-                              <Combobox.Options className="absolute z-10 bottom-full mb-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                              <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                                 {filteredStartTimes.map((time) => (
                                   <Combobox.Option
                                     key={time}
                                     value={time}
                                     className={({ active }) =>
-                                      `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                                        active ? 'bg-blue-600 text-white' : 'text-gray-900'
+                                      `relative cursor-pointer select-none py-2.5 pl-10 pr-4 ${
+                                        active ? 'bg-blue-50 text-blue-900' : 'text-gray-900'
                                       }`
                                     }
                                   >
-                                    {time}
+                                    {({ selected }) => (
+                                      <>
+                                        <span className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}>
+                                          {time}
+                                        </span>
+                                        {selected ? (
+                                          <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
+                                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                                          </span>
+                                        ) : null}
+                                      </>
+                                    )}
                                   </Combobox.Option>
                                 ))}
                               </Combobox.Options>
@@ -364,24 +375,35 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
                         <div className="flex-1 min-w-0">
                           <Combobox value={endTime} onChange={setEndTime} disabled={!startTime}>
                             <div className="relative">
-                              <Combobox.Button className={`w-full p-2 border rounded flex justify-between items-center ${!startTime ? 'bg-gray-100 cursor-not-allowed' : 'bg-white enable-mobile-hover hover:border-gray-400'} h-[42px] transition-colors`} disabled={!startTime}>
-                                <span className={(!startTime ? 'text-gray-400 text-xs' : endTime ? '' : 'text-gray-400 text-xs') + ' truncate'}>
+                              <Combobox.Button className={`w-full px-4 py-2.5 border border-gray-300 rounded-lg flex justify-between items-center ${!startTime ? 'bg-gray-100 cursor-not-allowed' : 'bg-white hover:border-gray-400'} transition-all duration-200`} disabled={!startTime}>
+                                <span className={(!startTime ? 'text-gray-400' : endTime ? 'text-gray-700' : 'text-gray-400') + ' truncate'}>
                                   {startTime ? (endTime || 'Select end time') : 'Select start time first'}
                                 </span>
                                 <ChevronUpDownIcon className={`h-5 w-5 ml-2 flex-shrink-0 ${!startTime ? 'text-gray-300' : 'text-gray-400'}`} aria-hidden="true" />
                               </Combobox.Button>
-                              <Combobox.Options className="absolute z-10 bottom-full mb-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                              <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                                 {filteredEndTimes.map((time) => (
                                   <Combobox.Option
                                     key={time}
                                     value={time}
                                     className={({ active }) =>
-                                      `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                                        active ? 'bg-blue-600 text-white' : 'text-gray-900'
+                                      `relative cursor-pointer select-none py-2.5 pl-10 pr-4 ${
+                                        active ? 'bg-blue-50 text-blue-900' : 'text-gray-900'
                                       }`
                                     }
                                   >
-                                    {time}
+                                    {({ selected }) => (
+                                      <>
+                                        <span className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}>
+                                          {time}
+                                        </span>
+                                        {selected ? (
+                                          <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
+                                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                                          </span>
+                                        ) : null}
+                                      </>
+                                    )}
                                   </Combobox.Option>
                                 ))}
                               </Combobox.Options>
@@ -397,7 +419,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
                         onChange={handleChange}
                         placeholder="Room"
                         required
-                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent enable-mobile-hover hover:border-gray-400 transition-colors"
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 hover:border-gray-400 transition-all duration-200"
                       />
                     </div>
                     <div>
@@ -407,7 +429,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
                         onChange={handleChange}
                         placeholder="Instructor"
                         required
-                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent enable-mobile-hover hover:border-gray-400 transition-colors"
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 hover:border-gray-400 transition-all duration-200"
                       />
                     </div>
                     
