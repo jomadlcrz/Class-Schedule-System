@@ -215,7 +215,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
       >
         <button
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-md transition-all cursor-pointer text-sm font-medium enable-mobile-hover hover:opacity-80 mx-auto"
+          className="flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-md transition-all cursor-pointer text-sm font-medium enable-mobile-hover hover:opacity-80 active:bg-blue-700 mx-auto"
         >
           <PlusIcon className="h-5 w-5" />
           Add New Schedule
@@ -259,7 +259,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all relative">
                   <button
                     onClick={() => setIsModalOpen(false)}
-                    className="absolute top-4 right-4 text-gray-400 enable-mobile-hover hover:text-gray-600 focus:outline-none transition-colors"
+                    className="absolute top-4 right-4 text-gray-400 enable-mobile-hover hover:text-gray-600 active:bg-gray-100 focus:outline-none transition-colors"
                   >
                     <XMarkIcon className="h-6 w-6" />
                   </button>
@@ -436,7 +436,7 @@ export default function ScheduleForm({ onAdded }: { onAdded: (callback: (prev: S
                     <button
                       type="submit"
                       disabled={isSubmitting || Object.keys(validationErrors).some(key => validationErrors[key as keyof typeof validationErrors])}
-                      className="w-full inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed items-center gap-2 enable-mobile-hover hover:opacity-80 transition-all"
+                      className="w-full inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed items-center gap-2 enable-mobile-hover hover:opacity-80 active:bg-blue-700 transition-all"
                     >
                       {isSubmitting ? (
                         <>

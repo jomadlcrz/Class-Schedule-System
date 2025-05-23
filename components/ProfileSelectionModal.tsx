@@ -254,7 +254,7 @@ export default function ProfileSelectionModal() {
                     )}
                     <button
                       type="submit"
-                      className={`${isEditMode ? 'flex-1' : 'w-full'} bg-blue-600 text-white py-2.5 rounded-lg hover:opacity-80 hover:shadow-md active:bg-blue-800 transition-colors duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed`}
+                      className={`${isEditMode ? 'flex-1' : 'w-full'} bg-blue-600 text-white py-2.5 rounded-lg hover:opacity-80 hover:shadow-md active:bg-blue-700 transition-colors duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed`}
                       disabled={loading}
                     >
                       {loading ? 'Saving...' : isEditMode ? 'Save Changes' : 'Save'}

@@ -135,7 +135,7 @@ export default function Home() {
           >
             <button
               onClick={() => signIn("google")}
-              className="flex items-center justify-center gap-2 bg-white text-gray-700 px-6 py-3 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors cursor-pointer"
+              className="flex items-center justify-center gap-2 bg-white text-gray-700 px-6 py-3 rounded-lg border border-gray-300 hover:bg-gray-50 active:bg-gray-100 transition-colors cursor-pointer"
             >
               <Image
                 src="/google.svg"
@@ -158,7 +158,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <button
             onClick={() => window.location.reload()}
-            className="flex items-center gap-3 md:hover:opacity-80 transition-opacity cursor-pointer"
+            className="flex items-center gap-3 md:hover:opacity-80 active:opacity-70 transition-opacity cursor-pointer"
           >
             <Image
               src="/logo.png"
